@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
+.home-title {
+  font-family: "Playfair Display", serif;
+  font-size: 38px;
+}
+
+#pole * {
+  border: 8px #223 solid;
+  box-sizing: border-box;
+}
+#pole .dome, #pole .ring {
+  background-color: #caedfb;
+}
+#pole .ring.top {
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100%);
+  box-shadow: inset #fafafa 0px 5px 0px;
+}
+#pole .ring.bottom {
+  top: calc(100% - 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(0%);
+  box-shadow: inset #fafafa 0px 5px 0px;
+}
+#pole .dome.top {
+  top: -19px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100%);
+  border-top-left-radius: 100px;
+  border-top-right-radius: 100px;
+  overflow: hidden;
+  box-shadow: inset #fafafa 0px 12px 0px;
+}
+#pole .dome.bottom {
+  top: calc(100% + 19px);
+  left: 50%;
+  transform: translateX(-50%) translateY(0%);
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+  box-shadow: inset rgba(0, 0, 0, 0.1) 0px 15px 0px;
+}
+#pole .dome {
+  position: absolute;
+  height: 50px;
+  width: 100px;
+}
+#pole .ring {
+  position: absolute;
+  height: 35px;
+  width: 130px;
+  border-radius: 100px;
+}
+#pole #middle {
+  overflow: hidden;
+}
+#pole #middle:before {
+  content: " ";
+  position: absolute;
+  z-index: -1;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  border-top: 25px solid rgba(0, 0, 0, 0.1);
+  z-index: 20;
+}
+#pole #middle .stripe {
+  z-index: 10;
+  height: 50px;
+  width: 200px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%) rotate(35deg);
+  animation: stripe 4s linear infinite;
+}
+#pole #middle .stripe.red {
+  background-color: #FE5F55;
+}
+#pole #middle .stripe.blue {
+  background-color: #39A9DB;
+}
+#pole #middle .stripe#a {
+  animation-delay: -1s;
+}
+#pole #middle .stripe#b {
+  animation-delay: -2s;
+}
+#pole #middle .stripe#c {
+  animation-delay: -3s;
+}
+#pole #middle .stripe#d {
+  animation-delay: -4s;
+}
+@keyframes stripe {
+  0% {
+    top: -50%;
+  }
+  100% {
+    top: 150%;
+  }
+}
+#pole #shadow {
+  z-index: -1;
+  border: none;
+  position: absolute;
+  top: 130%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 50px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 100%;
+}
+
+#pole {
+  position: relative;
+  margin-top: 2rem;
+  height: 200px;
+  width: 100px;
+  background-color: white;
+  transform: scale(0.5);
+  transform-origin: top center;
+}
+
+#middle {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
