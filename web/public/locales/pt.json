@@ -1,0 +1,12 @@
+{
+    "home": {
+        "title": "Barbearia Abel",
+        "description": "Cortes modernos, boas vibes e sem fila de espera. Marca o teu horário e está feito",
+        "appointmentButton": "Faz já a tua marcação",
+        "socials": {
+            "instagram": "Instagram",
+            "phone": "Telemóvel",
+            "email": "Email"
+        }
+    }
+}

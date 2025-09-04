@@ -5,16 +5,19 @@ import 'aos/dist/aos.css';
 import './home.css'
 import { useEffect } from 'react';
 import { Instagram, Mail, Phone } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 export default function Home() {
   useEffect(() => {
     Aos.init();
   }, []);
 
+  const t = useTranslations('home');
+
   return (
     <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen px-4 pb-20 gap-16">
       <main className="flex flex-col gap-[32px] row-start-2 items-center">
-        <h3 data-aos="fade-right" data-aos-duration="900" className="home-title">Abel BarberShop</h3>
+        <h3 data-aos="fade-right" data-aos-duration="900" className="home-title">{t('title')}</h3>
         <div id="pole">
           <div className="dome top"></div>
           <div className="ring top"></div>
@@ -28,10 +31,10 @@ export default function Home() {
           <div className="ring bottom"></div>
           <div id="shadow"></div>
         </div>
-        <p data-aos="fade-right" data-aos-duration="900" className="px-4 text-center">Fresh cuts, good vibes, and no waiting around. Book your time and you’re set.</p>
+        <p data-aos="fade-right" data-aos-duration="900" className="px-4 text-center">{t('description')}</p>
         <div data-aos="fade-right" data-aos-duration="900" className="holographic-container">
           <div className="holographic-card">
-            <h2>Book Your Appointment</h2>
+            <h2>{t('appointmentButton')}</h2>
           </div>
         </div>
       </main>
@@ -39,17 +42,17 @@ export default function Home() {
         <a className="flex items-center gap-2 hover:underline hover:underline-offset-4" 
           href="https://google.com" target="_blank" rel="noopener noreferrer"
         >
-          <Instagram color='white' />Instagram
+          <Instagram color='white' />{t('socials.instagram')}
         </a>
         <a className="flex items-center gap-2 hover:underline hover:underline-offset-4" 
           href="https://google.com" target="_blank" rel="noopener noreferrer"
         >
-          <Phone color='white' />Phone
+          <Phone color='white' />{t('socials.phone')}
         </a>
         <a className="flex items-center gap-2 hover:underline hover:underline-offset-4" 
           href="https://google.com" target="_blank" rel="noopener noreferrer"
         >
-          <Mail color='white' />Email
+          <Mail color='white' />{t('socials.email')}
         </a>
       </footer>
     </div>
