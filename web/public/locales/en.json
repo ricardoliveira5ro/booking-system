@@ -8,5 +8,12 @@
             "phone": "Phone",
             "email": "Email"
         }
+    },
+    "appointment": {
+        "step1": "Select service",
+        "step2": "Select date and time",
+        "step3": "Enter you details",
+        "backButton": "Back",
+        "continueButton": "Continue"
     }
 }
