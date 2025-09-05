@@ -14,7 +14,7 @@
 }
 
 .holographic-card {
-  background: #FE5F55;
+  background: var(--orange);
   display: flex;
   justify-items: center;
   align-items: center;
@@ -131,7 +131,7 @@
   animation: stripe 4s linear infinite;
 }
 #pole #middle .stripe.red {
-  background-color: #FE5F55;
+  background-color: var(--orange);
 }
 #pole #middle .stripe.blue {
   background-color: #39A9DB;
