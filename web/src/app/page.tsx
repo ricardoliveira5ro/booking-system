@@ -1,16 +1,8 @@
-"use client";
-
-import Aos from 'aos';
-import 'aos/dist/aos.css';
 import './home.css'
-import { useEffect } from 'react';
 import { Instagram, Mail, Phone } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 export default function Home() {
-  useEffect(() => {
-    Aos.init();
-  }, []);
 
   const t = useTranslations('home');
 

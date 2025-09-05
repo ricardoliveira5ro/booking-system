@@ -8,5 +8,12 @@
             "phone": "Telemóvel",
             "email": "Email"
         }
+    },
+    "appointment": {
+        "step1": "Escolhe o serviço",
+        "step2": "Escolhe a data e hora",
+        "step3": "Introduz os teus detalhes",
+        "backButton": "Voltar",
+        "continueButton": "Continuar"
     }
 }
