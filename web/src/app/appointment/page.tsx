@@ -15,7 +15,7 @@ export default function Appointment() {
     const [step, setStep] = useState(2);
 
     return (
-        <div className="grid grid-rows-[20px_1fr_20px] justify-items-center min-h-screen px-8 py-16 gap-y-12">
+        <div className="grid grid-rows-[auto_1fr_auto] justify-items-center h-screen px-8 py-16 gap-y-12">
             <header className="flex items-center justify-between w-full">
                 <CircularStepProgress currentStep={step} totalSteps={3} size={60} strokeWidth={4.5} />
                 <h1 className="font-sans text-2xl text-center">{t(`step${step}`)}</h1>
