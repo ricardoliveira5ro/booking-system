@@ -1,14 +1,40 @@
+"use client"
+
 import { Calendar, MoveLeft, MoveRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 import './dateTime.css'
+import { useMemo, useState } from "react";
 
 export default function DateTime() {
+
+    const t = useTranslations('appointment');
+
+    const [date, setDate] = useState(new Date());
+    const daysLeft = useMemo(() => {
+        const today = date;
+        const year = today.getFullYear();
+        const month = today.getMonth();
+
+        const lastDay = new Date(year, month + 1, 0).getDate();
+        const result = [];
+
+        for (let d = today.getDate(); d <= lastDay; d++) {
+            const current = new Date(year, month, d);
+            result.push({
+                dayNumber: d,
+                weekday: t(`days.${current.getDay()}`),
+            });
+        }
+
+        return result;
+    }, []);
     
     return (
         <main className="flex flex-col w-full h-full min-h-0 min-w-0 pt-4 px-2 gap-y-6">
             <div className="flex items-center justify-between gap-x-4">
                 <div className="flex gap-x-2 items-center justify-center">
                     <Calendar color="var(--orange)" />
-                    <span>Setembro 2025</span>
+                    <span>{t(`months.${date.getMonth()}`)}</span>
                 </div>
                 <div className="flex gap-x-2 items-center justify-center">
                     <MoveLeft size={28} />
@@ -17,50 +43,14 @@ export default function DateTime() {
             </div>
             <div className="w-full overflow-x-auto scrollbar-hide">
                 <div className="flex gap-x-4 flex-nowrap">
-                    <div className="flex flex-col items-center justify-center gap-y-2">
-                        <div className="flex-shrink-0 w-[35px] h-[35px] leading-[35px] rounded-full text-center bg-white text-black">11</div>
-                        <span className="text-sm">Thu</span>
-                    </div>
-                    <div className="flex flex-col items-center justify-center gap-y-2">
-                        <div className="flex-shrink-0 w-[35px] h-[35px] leading-[35px] rounded-full text-center bg-[var(--orange)] text-white">11</div>
-                        <span className="text-sm">Thu</span>
-                    </div>
-                    <div className="flex flex-col items-center justify-center gap-y-2">
-                        <div className="flex-shrink-0 w-[35px] h-[35px] leading-[35px] rounded-full text-center bg-white text-black">11</div>
-                        <span className="text-sm">Thu</span>
-                    </div>
-                    <div className="flex flex-col items-center justify-center gap-y-2">
-                        <div className="flex-shrink-0 w-[35px] h-[35px] leading-[35px] rounded-full text-center bg-white text-black">11</div>
-                        <span className="text-sm">Thu</span>
-                    </div>
-                    <div className="flex flex-col items-center justify-center gap-y-2">
-                        <div className="flex-shrink-0 w-[35px] h-[35px] leading-[35px] rounded-full text-center bg-white text-black">11</div>
-                        <span className="text-sm">Thu</span>
-                    </div>
-                    <div className="flex flex-col items-center justify-center gap-y-2">
-                        <div className="flex-shrink-0 w-[35px] h-[35px] leading-[35px] rounded-full text-center bg-white text-black">11</div>
-                        <span className="text-sm">Thu</span>
-                    </div>
-                    <div className="flex flex-col items-center justify-center gap-y-2">
-                        <div className="flex-shrink-0 w-[35px] h-[35px] leading-[35px] rounded-full text-center bg-white text-black">11</div>
-                        <span className="text-sm">Thu</span>
-                    </div>
-                    <div className="flex flex-col items-center justify-center gap-y-2">
-                        <div className="flex-shrink-0 w-[35px] h-[35px] leading-[35px] rounded-full text-center bg-white text-black">11</div>
-                        <span className="text-sm">Thu</span>
-                    </div>
-                    <div className="flex flex-col items-center justify-center gap-y-2">
-                        <div className="flex-shrink-0 w-[35px] h-[35px] leading-[35px] rounded-full text-center bg-white text-black">11</div>
-                        <span className="text-sm">Thu</span>
-                    </div>
-                    <div className="flex flex-col items-center justify-center gap-y-2">
-                        <div className="flex-shrink-0 w-[35px] h-[35px] leading-[35px] rounded-full text-center bg-white text-black">11</div>
-                        <span className="text-sm">Thu</span>
-                    </div>
-                    <div className="flex flex-col items-center justify-center gap-y-2">
-                        <div className="flex-shrink-0 w-[35px] h-[35px] leading-[35px] rounded-full text-center bg-white text-black">11</div>
-                        <span className="text-sm">Thu</span>
-                    </div>
+                    {daysLeft.map(({ dayNumber, weekday }) => (
+                        <div key={dayNumber} className="flex flex-col items-center justify-center gap-y-2">
+                            <div className="flex-shrink-0 w-[35px] h-[35px] leading-[35px] rounded-full text-center bg-white text-black">
+                                {dayNumber}
+                            </div>
+                            <span className="text-sm">{weekday}</span>
+                        </div>
+                    ))}
                 </div>
             </div>
             <div className="flex flex-1 flex-col pt-6 gap-y-6 overflow-y-auto scrollbar-hide">
