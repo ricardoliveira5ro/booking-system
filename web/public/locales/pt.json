@@ -37,6 +37,10 @@
             "9": "Outubro",
             "10": "Novembro",
             "11": "Dezembro"
-        }
+        },
+        "name": "Nome",
+        "email": "Email",
+        "phone": "Telemóvel",
+        "details": "Detalhes specificos"
     }
 }
