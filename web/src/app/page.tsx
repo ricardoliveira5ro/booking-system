@@ -1,6 +1,7 @@
 import './home.css'
 import { Instagram, Mail, Phone } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 
 export default function Home() {
 
@@ -25,9 +26,9 @@ export default function Home() {
         </div>
         <p data-aos="fade-right" data-aos-duration="900" className="px-4 text-center">{t('description')}</p>
         <div data-aos="fade-right" data-aos-duration="900" className="holographic-container">
-          <div className="holographic-card">
+          <Link href={'/appointment'} className="holographic-card cursor-pointer">
             <h2>{t('appointmentButton')}</h2>
-          </div>
+          </Link>
         </div>
       </main>
       <footer data-aos="fade-up" data-aos-anchor-placement="center-bottom" data-aos-duration="900"  className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">

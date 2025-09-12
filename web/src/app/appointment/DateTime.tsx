@@ -2,7 +2,7 @@
 
 import { Calendar, MoveLeft, MoveRight } from "lucide-react";
 import { useTranslations } from "next-intl";
-import './dateTime.css'
+import './appointment.css'
 import { useMemo, useState } from "react";
 
 export default function DateTime() {

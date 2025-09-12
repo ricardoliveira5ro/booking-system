@@ -37,6 +37,10 @@
             "9": "October",
             "10": "November",
             "11": "December"
-        }
+        },
+        "name": "Your Name",
+        "email": "Email",
+        "phone": "Phone Number",
+        "details": "Specific details"
     }
 }
