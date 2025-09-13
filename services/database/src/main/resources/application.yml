@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://db.joytsesydvoenrfrjopd.supabase.co:5432/postgres
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+flyway:
+  enabled: true
+  validate-on-migrate: true
