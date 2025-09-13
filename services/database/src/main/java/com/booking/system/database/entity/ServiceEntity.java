@@ -1,4 +1,4 @@
-package entity;
+package com.booking.system.database.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -6,8 +6,8 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.UUID;
 
 @Entity
 @Table(name = "T_SERVICE")
@@ -16,21 +16,20 @@ import java.util.UUID;
 public class ServiceEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id")
-    private UUID id;
+    @Column(name = "CODE")
+    private String code;
 
-    @Column(name = "name")
+    @Column(name = "NAME")
     private String name;
 
-    @Column(name = "price")
-    private double price;
+    @Column(name = "PRICE")
+    private BigDecimal price;
 
     @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
+    @Column(name = "CREATED_AT", updatable = false)
     private Instant createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_at")
+    @Column(name = "UPDATED_AT")
     private Instant updatedAt;
 }
