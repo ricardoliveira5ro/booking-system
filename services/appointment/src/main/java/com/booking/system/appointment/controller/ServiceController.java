@@ -4,6 +4,7 @@ import com.booking.system.appointment.dto.ServiceDTO;
 import com.booking.system.appointment.service.ServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +19,7 @@ public class ServiceController {
     private ServiceService serviceService;
 
     @GetMapping
+    @CrossOrigin("http://localhost:3000") // To be removed when spring security added
     public ResponseEntity<List<ServiceDTO>> getAllServices() {
         return ResponseEntity.ok(serviceService.getAllServices());
     }
