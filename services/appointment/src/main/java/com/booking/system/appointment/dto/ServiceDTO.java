@@ -16,4 +16,5 @@ public class ServiceDTO {
     private String code;
     private String name;
     private BigDecimal price;
+    private Integer slotTime;
 }

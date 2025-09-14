@@ -25,6 +25,9 @@ public class ServiceEntity {
     @Column(name = "PRICE")
     private BigDecimal price;
 
+    @Column(name = "SLOT_TIME")
+    private Integer slotTime;
+
     @CreationTimestamp
     @Column(name = "CREATED_AT", updatable = false)
     private Instant createdAt;

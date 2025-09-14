@@ -4,28 +4,30 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="30034f2f-b689-470f-b341-bd9a7bc0427a" name="Changes" comment="database module">
-      <change afterPath="$PROJECT_DIR$/appointment/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/appointment/src/main/java/com/booking/system/appointment/AppointmentApplication.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/appointment/src/main/java/com/booking/system/appointment/config/AppConfiguration.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/appointment/src/main/java/com/booking/system/appointment/controller/ServiceController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/appointment/src/main/java/com/booking/system/appointment/dto/ServiceDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/appointment/src/main/java/com/booking/system/appointment/repository/ServiceRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/appointment/src/main/java/com/booking/system/appointment/service/ServiceService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/appointment/src/main/resources/application.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/src/main/resources/db/releases/1.1_AfterMigrate.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/src/main/resources/db/releases/1.1_AfterRollback.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+    <list default="true" id="30034f2f-b689-470f-b341-bd9a7bc0427a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/src/main/java/entity/ServiceEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/database/src/main/java/com/booking/system/database/entity/ServiceEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/database/src/main/resources/application-database.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/appointment/src/main/java/com/booking/system/appointment/controller/ServiceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/appointment/src/main/java/com/booking/system/appointment/controller/ServiceController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/appointment/src/main/java/com/booking/system/appointment/dto/ServiceDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/appointment/src/main/java/com/booking/system/appointment/dto/ServiceDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/src/main/java/com/booking/system/database/entity/ServiceEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/database/src/main/java/com/booking/system/database/entity/ServiceEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/src/main/resources/application-database.yml" beforeDir="false" afterPath="$PROJECT_DIR$/database/src/main/resources/application-database.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/database/src/main/resources/db/migration/V1__T_SERVICE.sql" beforeDir="false" afterPath="$PROJECT_DIR$/database/src/main/resources/db/migration/V1__T_SERVICE.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/src/main/resources/db/releases/1.1_AfterMigrate.sql" beforeDir="false" afterPath="$PROJECT_DIR$/database/src/main/resources/db/releases/1.1_AfterMigrate.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../web/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../web/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../web/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../web/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../web/src/app/appointment/Service.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../web/src/app/appointment/Service.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../web/src/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../web/src/app/layout.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager">
+    <option name="groupingKeys">
+      <option value="directory" />
+      <option value="module" />
+      <option value="repository" />
+    </option>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -65,6 +67,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "mvp",
+    "ignore.virus.scanning.warn.message": "true",
     "last_opened_file_path": "C:/Users/ricar/OneDrive/Ambiente de Trabalho/Projects/booking-system/services/appointment/src/main/resources",
     "onboarding.tips.debug.path": "C:/Users/ricar/OneDrive/Ambiente de Trabalho/Projects/booking-system/services/appointment/src/main/java/com/booking/system/Main.java",
     "project.structure.last.edited": "Modules",
@@ -82,6 +85,11 @@
   </component>
   <component name="RunManager">
     <configuration name="AppointmentApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <envs>
+        <env name="DB_PASSWORD" value="v0fk3nOD3ZlUau1h" />
+        <env name="DB_URL" value="jdbc:postgresql://db.joytsesydvoenrfrjopd.supabase.co:5432/postgres" />
+        <env name="DB_USERNAME" value="postgres" />
+      </envs>
       <option name="MAIN_CLASS_NAME" value="com.booking.system.appointment.AppointmentApplication" />
       <module name="appointment" />
       <extension name="coverage">
