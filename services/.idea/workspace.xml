@@ -4,18 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="30034f2f-b689-470f-b341-bd9a7bc0427a" name="Changes" comment="">
+    <list default="true" id="30034f2f-b689-470f-b341-bd9a7bc0427a" name="Changes" comment="QueryProvider (client component for TanStack Query)">
+      <change afterPath="$PROJECT_DIR$/security/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/security/src/main/java/com/booking/system/security/SecurityConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/appointment/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/appointment/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/appointment/src/main/java/com/booking/system/appointment/controller/ServiceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/appointment/src/main/java/com/booking/system/appointment/controller/ServiceController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/appointment/src/main/java/com/booking/system/appointment/dto/ServiceDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/appointment/src/main/java/com/booking/system/appointment/dto/ServiceDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/src/main/java/com/booking/system/database/entity/ServiceEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/database/src/main/java/com/booking/system/database/entity/ServiceEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/src/main/resources/application-database.yml" beforeDir="false" afterPath="$PROJECT_DIR$/database/src/main/resources/application-database.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/src/main/resources/db/migration/V1__T_SERVICE.sql" beforeDir="false" afterPath="$PROJECT_DIR$/database/src/main/resources/db/migration/V1__T_SERVICE.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/src/main/resources/db/releases/1.1_AfterMigrate.sql" beforeDir="false" afterPath="$PROJECT_DIR$/database/src/main/resources/db/releases/1.1_AfterMigrate.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../web/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../web/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../web/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../web/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../web/src/app/appointment/Service.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../web/src/app/appointment/Service.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../web/src/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../web/src/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,21 +56,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.AppointmentApplication.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "mvp",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/ricar/OneDrive/Ambiente de Trabalho/Projects/booking-system/services/appointment/src/main/resources",
-    "onboarding.tips.debug.path": "C:/Users/ricar/OneDrive/Ambiente de Trabalho/Projects/booking-system/services/appointment/src/main/java/com/booking/system/Main.java",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.AppointmentApplication.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;mvp&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/ricar/OneDrive/Ambiente de Trabalho/Projects/booking-system/services/appointment/src/main/resources&quot;,
+    &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/ricar/OneDrive/Ambiente de Trabalho/Projects/booking-system/services/appointment/src/main/java/com/booking/system/Main.java&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\ricar\OneDrive\Ambiente de Trabalho\Projects\booking-system\services\appointment\src\main\resources" />
@@ -116,6 +112,28 @@
       <option name="presentableId" value="Default" />
       <updated>1757689417658</updated>
     </task>
+    <task id="LOCAL-00001" summary="dynamically render services">
+      <option name="closed" value="true" />
+      <created>1757838453644</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1757838453644</updated>
+    </task>
+    <task id="LOCAL-00002" summary="QueryProvider (client component for TanStack Query)">
+      <option name="closed" value="true" />
+      <created>1757866803142</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1757866803142</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="dynamically render services" />
+    <MESSAGE value="QueryProvider (client component for TanStack Query)" />
+    <option name="LAST_COMMIT_MESSAGE" value="QueryProvider (client component for TanStack Query)" />
   </component>
 </project>
