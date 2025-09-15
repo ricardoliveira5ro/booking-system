@@ -1,6 +1,7 @@
 package com.booking.system.database.entity;
 
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -13,19 +14,21 @@ import java.time.Instant;
 @Table(name = "T_SERVICE")
 @Getter
 @Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class ServiceEntity {
 
     @Id
+    @EqualsAndHashCode.Include // Lombok uses this to calculate equals and hashcode functions (Objects with same code are equal)
     @Column(name = "CODE")
     private String code;
 
-    @Column(name = "NAME")
+    @Column(name = "NAME", nullable = false, length = 128)
     private String name;
 
-    @Column(name = "PRICE")
+    @Column(name = "PRICE", nullable = false)
     private BigDecimal price;
 
-    @Column(name = "SLOT_TIME")
+    @Column(name = "SLOT_TIME", nullable = false)
     private Integer slotTime;
 
     @CreationTimestamp
