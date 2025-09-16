@@ -2,6 +2,7 @@ package com.booking.system.appointment.controller;
 
 import com.booking.system.appointment.dto.AppointmentRequestDTO;
 import com.booking.system.appointment.service.AppointmentService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ public class AppointmentController {
     private AppointmentService appointmentService;
 
     @PostMapping("/time-slots")
-    public ResponseEntity<List<String>> getTimeSlots(@RequestBody AppointmentRequestDTO appointmentRequest) {
+    public ResponseEntity<List<String>> getTimeSlots(@Valid @RequestBody AppointmentRequestDTO appointmentRequest) {
         List<LocalTime> timeSlots = appointmentService.getAvailableTimeSlots(appointmentRequest);
 
         return ResponseEntity.ok(timeSlots.stream().map(LocalTime::toString).toList());

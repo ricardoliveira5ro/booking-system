@@ -22,4 +22,10 @@ public class ServiceService {
                 .stream().map(serviceEntity -> this.modelMapper.map(serviceEntity, ServiceDTO.class))
                 .toList();
     }
+
+    public List<ServiceDTO> getServicesByCode(List<String> codes) {
+        return serviceRepository.findAllById(codes)
+                .stream().map(serviceEntity -> this.modelMapper.map(serviceEntity, ServiceDTO.class))
+                .toList();
+    }
 }

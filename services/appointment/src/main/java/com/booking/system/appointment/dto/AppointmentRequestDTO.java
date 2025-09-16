@@ -1,5 +1,8 @@
 package com.booking.system.appointment.dto;
 
+import com.booking.system.appointment.validation.ValidAppointmentDate;
+import com.booking.system.appointment.validation.ValidServices;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,11 +17,13 @@ import java.util.List;
 @NoArgsConstructor
 public class AppointmentRequestDTO {
 
-    private LocalDateTime appointmentDay;
-    private List<ServiceDTO> services;
-    // Todo: DetailsDTO
+    @NotNull
+    @ValidAppointmentDate
+    private LocalDateTime appointmentDate;
 
-    public int getDuration() {
-        return services.stream().mapToInt(ServiceDTO::getSlotTime).sum();
-    }
+    @NotNull
+    @ValidServices
+    private List<String> services;
+
+    // Todo: DetailsDTO
 }

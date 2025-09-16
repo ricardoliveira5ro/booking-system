@@ -1,6 +1,7 @@
 package com.booking.system.appointment.service;
 
 import com.booking.system.appointment.dto.AppointmentRequestDTO;
+import com.booking.system.appointment.dto.ServiceDTO;
 import com.booking.system.appointment.repository.AppointmentRepository;
 import com.booking.system.database.entity.AppointmentEntity;
 import com.booking.system.database.entity.ServiceEntity;
@@ -19,18 +20,24 @@ public class AppointmentService {
     @Autowired
     private AppointmentRepository appointmentRepository;
 
+    @Autowired
+    private ServiceService serviceService;
+
     // To be replaced by configs
     private static final LocalTime START_WORKING_HOURS = LocalTime.of(9, 0);
     private static final LocalTime END_WORKING_HOURS = LocalTime.of(19, 30);
 
     public List<LocalTime> getAvailableTimeSlots(AppointmentRequestDTO appointmentRequest) {
-        LocalDate date = appointmentRequest.getAppointmentDay().toLocalDate();
+        LocalDate date = appointmentRequest.getAppointmentDate().toLocalDate();
         List<AppointmentEntity> existingAppointments = appointmentRepository.findByStartAtBetween(date.atStartOfDay(), date.atTime(LocalTime.MAX));
+
+        int durationRequested = serviceService.getServicesByCode(appointmentRequest.getServices())
+                                                .stream().mapToInt(ServiceDTO::getSlotTime).sum();
 
         List<LocalTime> availableTimeSlots = new ArrayList<>();
         for (LocalTime timeSlot : generateSlots()) {
             LocalDateTime startTime = LocalDateTime.of(date, timeSlot);
-            LocalDateTime endTime = startTime.plusMinutes(appointmentRequest.getDuration());
+            LocalDateTime endTime = startTime.plusMinutes(durationRequested);
 
             if (endTime.toLocalTime().isAfter(END_WORKING_HOURS))
                 break;
