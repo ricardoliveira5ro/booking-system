@@ -12,6 +12,7 @@
         <module>database</module>
         <module>appointment</module>
         <module>security</module>
+        <module>common</module>
     </modules>
 
     <properties>
