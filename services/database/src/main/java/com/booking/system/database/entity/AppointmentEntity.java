@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "APPOINTMENT")
+@Table(name = "T_APPOINTMENT")
 @Getter
 @Setter
 public class AppointmentEntity {
@@ -22,8 +22,17 @@ public class AppointmentEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "CLIENT_EMAIL", nullable = false, length = 128)
+    @Column(name = "CLIENT_NAME", length = 128)
+    private String clientName;
+
+    @Column(name = "CLIENT_EMAIL", length = 128)
     private String clientEmail;
+
+    @Column(name = "PHONE_NUMBER", length = 128)
+    private Integer phoneNumber;
+
+    @Column(name = "DETAILS", length = 256)
+    private String message;
 
     @Column(name = "START_AT")
     private LocalDateTime startAt;
@@ -38,7 +47,7 @@ public class AppointmentEntity {
 
     @ManyToMany
     @JoinTable(
-        name = "APPOINTMENT_SERVICE",
+        name = "T_APPOINTMENT_SERVICE",
         joinColumns = @JoinColumn(name = "APPOINTMENT_ID"),
         inverseJoinColumns = @JoinColumn(name = "SERVICE_CODE")
     )
