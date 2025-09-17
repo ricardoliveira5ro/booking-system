@@ -1,10 +1,12 @@
 package com.booking.system.appointment.service;
 
+import com.booking.system.appointment.dto.AppointmentDTO;
 import com.booking.system.appointment.dto.AppointmentRequestDTO;
 import com.booking.system.appointment.dto.ServiceDTO;
 import com.booking.system.appointment.repository.AppointmentRepository;
 import com.booking.system.database.entity.AppointmentEntity;
 import com.booking.system.database.entity.ServiceEntity;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -23,9 +26,23 @@ public class AppointmentService {
     @Autowired
     private ServiceService serviceService;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     // To be replaced by configs
     private static final LocalTime START_WORKING_HOURS = LocalTime.of(9, 0);
     private static final LocalTime END_WORKING_HOURS = LocalTime.of(19, 30);
+
+    public AppointmentDTO createAppointment(AppointmentRequestDTO appointmentRequest) {
+        List<ServiceEntity> services = serviceService.getServicesByCode(appointmentRequest.getServices())
+                .stream().map(s -> this.modelMapper.map(s, ServiceEntity.class))
+                .toList();
+
+        AppointmentEntity appointment = modelMapper.map(appointmentRequest, AppointmentEntity.class);
+        appointment.setServices(new HashSet<>(services));
+
+        return modelMapper.map(appointmentRepository.save(appointment), AppointmentDTO.class);
+    }
 
     public List<LocalTime> getAvailableTimeSlots(AppointmentRequestDTO appointmentRequest) {
         LocalDate date = appointmentRequest.getAppointmentDate().toLocalDate();

@@ -1,5 +1,6 @@
 package com.booking.system.appointment.controller;
 
+import com.booking.system.appointment.dto.AppointmentDTO;
 import com.booking.system.appointment.dto.AppointmentRequestDTO;
 import com.booking.system.appointment.service.AppointmentService;
 import jakarta.validation.Valid;
@@ -22,5 +23,12 @@ public class AppointmentController {
         List<LocalTime> timeSlots = appointmentService.getAvailableTimeSlots(appointmentRequest);
 
         return ResponseEntity.ok(timeSlots.stream().map(LocalTime::toString).toList());
+    }
+
+    @PostMapping
+    public ResponseEntity<AppointmentDTO> createAppointment(@Valid @RequestBody AppointmentRequestDTO appointmentRequest) {
+        AppointmentDTO appointment = appointmentService.createAppointment(appointmentRequest);
+
+        return ResponseEntity.ok(appointment);
     }
 }
