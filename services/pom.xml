@@ -10,9 +10,9 @@
     <packaging>pom</packaging>
     <modules>
         <module>database</module>
-        <module>appointment</module>
-        <module>security</module>
         <module>common</module>
+        <module>security</module>
+        <module>appointment</module>
     </modules>
 
     <properties>
