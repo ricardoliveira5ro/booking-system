@@ -8,11 +8,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ ElementType.FIELD })
+@Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = ServicesValidator.class)
-public @interface ValidServices {
-    String message() default "Invalid services";
+@Constraint(validatedBy = AppointmentDTOValidator.class)
+public @interface ValidAppointmentDTO {
+    String message() default "Invalid Appointment Request";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }
