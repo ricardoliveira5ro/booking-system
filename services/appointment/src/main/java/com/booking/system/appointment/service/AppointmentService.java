@@ -46,7 +46,6 @@ public class AppointmentService {
 
     public List<LocalTime> getAvailableTimeSlots(AppointmentRequestDTO appointmentRequest) {
         LocalDate date = appointmentRequest.getAppointmentDate().toLocalDate();
-        List<AppointmentEntity> existingAppointments = appointmentRepository.findByStartAtBetween(date.atStartOfDay(), date.atTime(LocalTime.MAX));
 
         int durationRequested = serviceService.getServicesByCode(appointmentRequest.getServices())
                                                 .stream().mapToInt(ServiceDTO::getSlotTime).sum();
@@ -59,7 +58,7 @@ public class AppointmentService {
             if (endTime.toLocalTime().isAfter(END_WORKING_HOURS))
                 break;
 
-            if (!doesOverlapTimeSlot(startTime, endTime, existingAppointments))
+            if (!doesOverlapTimeSlot(startTime, endTime, date))
                 availableTimeSlots.add(timeSlot);
         }
 
@@ -78,7 +77,9 @@ public class AppointmentService {
         return slots;
     }
 
-    private boolean doesOverlapTimeSlot(LocalDateTime requestedStartTime, LocalDateTime requestedEndTime, List<AppointmentEntity> existingAppointments) {
+    public boolean doesOverlapTimeSlot(LocalDateTime requestedStartTime, LocalDateTime requestedEndTime, LocalDate date) {
+        List<AppointmentEntity> existingAppointments = appointmentRepository.findByStartAtBetween(date.atStartOfDay(), date.atTime(LocalTime.MAX));
+
         for (AppointmentEntity existingAppointment : existingAppointments) {
             int duration = existingAppointment.getServices().stream().mapToInt(ServiceEntity::getSlotTime).sum();
             LocalDateTime existingAppointmentEndTime = existingAppointment.getStartAt().plusMinutes(duration);

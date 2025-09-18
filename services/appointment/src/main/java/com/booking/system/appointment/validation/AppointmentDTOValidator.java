@@ -2,12 +2,14 @@ package com.booking.system.appointment.validation;
 
 import com.booking.system.appointment.dto.AppointmentRequestDTO;
 import com.booking.system.appointment.dto.ServiceDTO;
+import com.booking.system.appointment.service.AppointmentService;
 import com.booking.system.appointment.service.ServiceService;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -16,6 +18,9 @@ public class AppointmentDTOValidator implements ConstraintValidator<ValidAppoint
 
     @Autowired
     private ServiceService serviceService;
+
+    @Autowired
+    private AppointmentService appointmentService;
 
     // To be replaced by configs
     private static final LocalTime START_WORKING_HOURS = LocalTime.of(9, 0);
@@ -32,6 +37,15 @@ public class AppointmentDTOValidator implements ConstraintValidator<ValidAppoint
         ) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("Invalid appointment date")
+                    .addPropertyNode("appointmentDate")
+                    .addConstraintViolation();
+
+            isValid = false;
+        }
+
+        if (doesOverlapTimeSlot(appointmentRequestDTO)) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("This appointment time is already booked")
                     .addPropertyNode("appointmentDate")
                     .addConstraintViolation();
 
@@ -59,5 +73,16 @@ public class AppointmentDTOValidator implements ConstraintValidator<ValidAppoint
         LocalDateTime endTime = appointmentRequestDTO.getAppointmentDate().plusMinutes(duration);
 
         return endTime.toLocalTime().isAfter(END_WORKING_HOURS);
+    }
+
+    private boolean doesOverlapTimeSlot(AppointmentRequestDTO appointmentRequestDTO) {
+        int duration = serviceService.getServicesByCode(appointmentRequestDTO.getServices())
+                .stream().mapToInt(ServiceDTO::getSlotTime).sum();
+
+        LocalDate date = appointmentRequestDTO.getAppointmentDate().toLocalDate();
+        LocalDateTime requestedStartTime = appointmentRequestDTO.getAppointmentDate();
+        LocalDateTime requestedEndTime = appointmentRequestDTO.getAppointmentDate().plusMinutes(duration);
+
+        return appointmentService.doesOverlapTimeSlot(requestedStartTime, requestedEndTime, date);
     }
 }
