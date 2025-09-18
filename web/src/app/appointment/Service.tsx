@@ -1,21 +1,26 @@
 "use client"
 
 import { useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
+import { AppointmentData } from './Appointment';
 
-export default function Service() {
+type Props = {
+    appointmentFormData: AppointmentData;
+    setAppointmentFormData: React.Dispatch<React.SetStateAction<AppointmentData>>;
+};
 
-    const [selectedServices, setSelectedServices] = useState<string[]>([])
-
-    const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>, code: string) => {
-        e.target.checked ? setSelectedServices((prev) => [...prev, code]) :
-                            setSelectedServices((prev) => prev.filter((c) => c !== code))
-    }
+export default function Service({ appointmentFormData, setAppointmentFormData }: Props) {
 
     const { data, isPending, error } = useQuery({
         queryKey: ['services'],
         queryFn: () => fetch('http://localhost:8081/api/appointment/services').then(r => r.json()),
     })
+
+    const toggleService = (code: string, checked: boolean) => {
+        setAppointmentFormData((prev) => ({
+            ...prev,
+            services: checked ? [...prev.services, code]: prev.services.filter((s) => s !== code),
+        }));
+    };
 
     return (
         <main className="flex flex-col w-full px-2 pt-8 gap-y-8">
@@ -26,7 +31,7 @@ export default function Service() {
                             <h3 className="font-sans text-lg">{s.name}</h3>
                             <span className="text-sm text-gray-300">{s.slotTime} mins</span>
                         </div>
-                        <input checked={selectedServices.includes(s.code)} onChange={(e) => { handleCheckboxChange(e, s.code) }} type="checkbox" className="accent-[var(--orange)] cursor-pointer"></input>
+                        <input checked={appointmentFormData.services.includes(s.code)} onChange={(e) => toggleService(s.code, e.target.checked)} type="checkbox" className="accent-[var(--orange)] cursor-pointer"></input>
                     </div>
                     <hr className="text-gray-500" />
                 </div>
