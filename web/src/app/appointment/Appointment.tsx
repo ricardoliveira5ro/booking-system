@@ -20,7 +20,7 @@ type AppointmentDetails = {
 
 export type AppointmentData = {
     services: string[];
-    date: Date | null;
+    date: Date;
     details: AppointmentDetails;
 }
 
@@ -29,9 +29,15 @@ export default function Appointment() {
     const t = useTranslations('appointment');
     const { step, back, next } = useAppointmentSteps();
 
+    function roundUpToNext30Min(): Date {
+        const rounded = new Date();
+        rounded.setMinutes(Math.ceil(rounded.getMinutes() / 30) * 30, 0, 0);
+        return rounded;
+    }
+
     const [appointmentFormData, setAppointmentFormData] = useState<AppointmentData>({
         services: [],
-        date: null,
+        date: roundUpToNext30Min(),
         details: {
             name: "",
             email: "",
