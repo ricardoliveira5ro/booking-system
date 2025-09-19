@@ -30,7 +30,7 @@ public class AppointmentDTOValidator implements ConstraintValidator<ValidAppoint
     public boolean isValid(AppointmentRequestDTO appointmentRequestDTO, ConstraintValidatorContext context) {
         boolean isValid = true;
 
-        if (appointmentRequestDTO.getAppointmentDate().isBefore(LocalDateTime.now()) ||
+        if (appointmentRequestDTO.getAppointmentDate().isBefore(LocalDateTime.now().minusMinutes(1)) ||
             appointmentRequestDTO.getAppointmentDate().toLocalTime().isBefore(START_WORKING_HOURS) ||
             appointmentRequestDTO.getAppointmentDate().toLocalTime().isAfter(END_WORKING_HOURS) ||
             isAppointmentDateEndsAfterHours(appointmentRequestDTO)
