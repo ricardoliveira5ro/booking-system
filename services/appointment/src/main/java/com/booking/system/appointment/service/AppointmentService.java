@@ -52,6 +52,9 @@ public class AppointmentService {
 
         List<LocalTime> availableTimeSlots = new ArrayList<>();
         for (LocalTime timeSlot : generateSlots()) {
+            if (date.isEqual(LocalDate.now()) && timeSlot.isBefore(LocalTime.now()))
+                continue;
+
             LocalDateTime startTime = LocalDateTime.of(date, timeSlot);
             LocalDateTime endTime = startTime.plusMinutes(durationRequested);
 
