@@ -1,39 +1,24 @@
 "use client"
 
 import { X } from "lucide-react";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 
-import CircularStepProgress from "./CircularStepProgress";
-import Service from "./Service";
-import DateTime from "./DateTime";
-import Details from "./Details";
+import CircularStepProgress from "../../components/appointment/CircularStepProgress";
+import Service from "../../components/appointment/Service";
+import DateTime from "../../components/appointment/DateTime";
+import Details from "../../components/appointment/Details";
+
 import { useAppointmentSteps } from "@/hooks/useAppointmentSteps";
-import { useState } from "react";
 
-type AppointmentDetails = {
-    name: string;
-    email: string;
-    phoneNumber: string;
-    message: string;
-}
-
-export type AppointmentData = {
-    services: string[];
-    date: Date;
-    details: AppointmentDetails;
-}
+import { roundUpToNext30Min } from "@/utils/functions";
+import { AppointmentData } from "@/models/Appointment";
 
 export default function Appointment() {
 
     const t = useTranslations('appointment');
     const { step, back, next } = useAppointmentSteps();
-
-    function roundUpToNext30Min(): Date {
-        const rounded = new Date();
-        rounded.setMinutes(Math.ceil(rounded.getMinutes() / 30) * 30, 0, 0);
-        return rounded;
-    }
 
     const [appointmentFormData, setAppointmentFormData] = useState<AppointmentData>({
         services: [],
