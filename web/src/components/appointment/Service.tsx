@@ -1,7 +1,7 @@
 "use client"
 
+import { AppointmentData } from '@/models/Appointment';
 import { useQuery } from '@tanstack/react-query'
-import { AppointmentData } from './Appointment';
 
 type Props = {
     appointmentFormData: AppointmentData;

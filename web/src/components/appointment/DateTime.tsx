@@ -1,0 +1,88 @@
+"use client"
+
+import { useTranslations } from "next-intl";
+import { useEffect } from "react";
+
+import { DateTimeCalendarHeader } from "@/components/appointment/DateTimeCalendarHeader";
+import { DateTimeDaySelector } from "@/components/appointment/DateTimeDaySelector";
+
+import { useTimeSlots } from "@/hooks/useTimeSlots";
+import { useCalendar } from "@/hooks/useCalendar";
+
+import { roundUpToNext30Min } from "@/utils/functions";
+import { AppointmentData } from "@/models/Appointment";
+
+import '../../app/appointment/appointment.css'
+
+type Props = {
+    appointmentFormData: AppointmentData;
+    setAppointmentFormData: React.Dispatch<React.SetStateAction<AppointmentData>>;
+};
+
+export default function DateTime({ appointmentFormData, setAppointmentFormData }: Props) {
+
+    const t = useTranslations('appointment');
+
+    const { displayedMonth, daysLeft, goPrev, goNext } = useCalendar(appointmentFormData.date);
+    const { mutate, data, isPending } = useTimeSlots(appointmentFormData);
+
+    useEffect(() => {
+        mutate();
+    }, [appointmentFormData.date]);
+
+    function handleDayClick(clickedDate: Date) {
+        const today = new Date();
+        const isToday =
+        clickedDate.getFullYear() === today.getFullYear() &&
+        clickedDate.getMonth() === today.getMonth() &&
+        clickedDate.getDate() === today.getDate();
+
+        let finalDate: Date;
+        if (isToday) {
+            finalDate = roundUpToNext30Min();
+            if (finalDate.getHours() < 9) {
+                finalDate = new Date(finalDate.getFullYear(), finalDate.getMonth(), finalDate.getDate(), 9, 0, 0);
+            }
+            
+        } else {
+            finalDate = new Date(clickedDate.getFullYear(), clickedDate.getMonth(), clickedDate.getDate(), 9, 0, 0);
+        }
+
+        setAppointmentFormData((prev) => ({ ...prev, date: finalDate }));
+    }
+
+    function isSelectedDay(day: Date) {
+        const sel = new Date(appointmentFormData.date);
+        return (
+            sel.getFullYear() === day.getFullYear() &&
+            sel.getMonth() === day.getMonth() &&
+            sel.getDate() === day.getDate()
+        );
+    }
+    
+    return (
+        <main className="flex flex-col w-full h-full min-h-0 min-w-0 pt-4 px-2 gap-y-6">
+            <DateTimeCalendarHeader 
+                monthLabel={`${t(`months.${displayedMonth.getMonth()}`)} ${displayedMonth.getFullYear()}`}
+                onPrev={goPrev}
+                onNext={goNext}
+            />
+            <DateTimeDaySelector 
+                days={daysLeft} 
+                onDayClick={handleDayClick} 
+                isSelected={isSelectedDay} 
+            />
+            <div className="flex flex-1 flex-col pt-6 gap-y-6 overflow-y-auto scrollbar-hide">
+                {(!isPending && data) && data.map((timeSlot: any, index: number) => (
+                    <div key={index} className="flex flex-col gap-y-3">
+                        <div className="flex justify-between items-center">
+                            <span className="font-bold">{timeSlot}</span>
+                            <input type="radio" name="time" className="accent-[var(--orange)] cursor-pointer" />
+                        </div>
+                        <hr />
+                    </div>
+                ))}
+            </div>
+        </main>
+    );
+}
