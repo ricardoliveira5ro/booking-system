@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Component
@@ -30,14 +29,25 @@ public class AppointmentDTOValidator implements ConstraintValidator<ValidAppoint
     public boolean isValid(AppointmentRequestDTO appointmentRequestDTO, ConstraintValidatorContext context) {
         boolean isValid = true;
 
-        if (appointmentRequestDTO.getAppointmentDate().isBefore(LocalDateTime.now().minusMinutes(1)) ||
-            appointmentRequestDTO.getAppointmentDate().toLocalTime().isBefore(START_WORKING_HOURS) ||
-            appointmentRequestDTO.getAppointmentDate().toLocalTime().isAfter(END_WORKING_HOURS) ||
-            isAppointmentDateEndsAfterHours(appointmentRequestDTO)
-        ) {
+        if (appointmentRequestDTO.getAppointmentDate().isBefore(LocalDate.now())) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("Invalid appointment date")
                     .addPropertyNode("appointmentDate")
+                    .addConstraintViolation();
+
+            isValid = false;
+        }
+
+        System.out.println();
+
+        if ((appointmentRequestDTO.getAppointmentDate().isEqual(LocalDate.now()) && appointmentRequestDTO.getAppointmentTime().isBefore(LocalTime.now().minusMinutes(1))) ||
+            appointmentRequestDTO.getAppointmentTime().isBefore(START_WORKING_HOURS) ||
+            appointmentRequestDTO.getAppointmentTime().isAfter(END_WORKING_HOURS) ||
+            isAppointmentTimeEndsAfterHours(appointmentRequestDTO)
+        ) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("Invalid appointment time")
+                    .addPropertyNode("appointmentTime")
                     .addConstraintViolation();
 
             isValid = false;
@@ -66,22 +76,22 @@ public class AppointmentDTOValidator implements ConstraintValidator<ValidAppoint
         return isValid;
     }
 
-    private boolean isAppointmentDateEndsAfterHours(AppointmentRequestDTO appointmentRequestDTO) {
+    private boolean isAppointmentTimeEndsAfterHours(AppointmentRequestDTO appointmentRequestDTO) {
         int duration = serviceService.getServicesByCode(appointmentRequestDTO.getServices())
-                                        .stream().mapToInt(ServiceDTO::getSlotTime).sum();
+                .stream().mapToInt(ServiceDTO::getSlotTime).sum();
 
-        LocalDateTime endTime = appointmentRequestDTO.getAppointmentDate().plusMinutes(duration);
+        LocalTime endTime = appointmentRequestDTO.getAppointmentTime().plusMinutes(duration);
 
-        return endTime.toLocalTime().isAfter(END_WORKING_HOURS);
+        return endTime.isAfter(END_WORKING_HOURS);
     }
 
     private boolean doesOverlapTimeSlot(AppointmentRequestDTO appointmentRequestDTO) {
         int duration = serviceService.getServicesByCode(appointmentRequestDTO.getServices())
                 .stream().mapToInt(ServiceDTO::getSlotTime).sum();
 
-        LocalDate date = appointmentRequestDTO.getAppointmentDate().toLocalDate();
-        LocalDateTime requestedStartTime = appointmentRequestDTO.getAppointmentDate();
-        LocalDateTime requestedEndTime = appointmentRequestDTO.getAppointmentDate().plusMinutes(duration);
+        LocalDate date = appointmentRequestDTO.getAppointmentDate();
+        LocalTime requestedStartTime = appointmentRequestDTO.getAppointmentTime();
+        LocalTime requestedEndTime = appointmentRequestDTO.getAppointmentTime().plusMinutes(duration);
 
         return appointmentService.doesOverlapTimeSlot(requestedStartTime, requestedEndTime, date);
     }

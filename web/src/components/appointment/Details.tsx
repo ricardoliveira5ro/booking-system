@@ -1,5 +1,6 @@
 import { useTranslations } from 'next-intl';
-import './appointment.css'
+
+import '../../app/appointment/appointment.css'
 
 export default function Details() {
 

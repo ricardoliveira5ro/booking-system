@@ -45,7 +45,7 @@ public class AppointmentService {
     }
 
     public List<LocalTime> getAvailableTimeSlots(AppointmentRequestDTO appointmentRequest) {
-        LocalDate date = appointmentRequest.getAppointmentDate().toLocalDate();
+        LocalDate date = appointmentRequest.getAppointmentDate();
 
         int durationRequested = serviceService.getServicesByCode(appointmentRequest.getServices())
                                                 .stream().mapToInt(ServiceDTO::getSlotTime).sum();
@@ -55,13 +55,10 @@ public class AppointmentService {
             if (date.isEqual(LocalDate.now()) && timeSlot.isBefore(LocalTime.now()))
                 continue;
 
-            LocalDateTime startTime = LocalDateTime.of(date, timeSlot);
-            LocalDateTime endTime = startTime.plusMinutes(durationRequested);
-
-            if (endTime.toLocalTime().isAfter(END_WORKING_HOURS))
+            if (timeSlot.plusMinutes(durationRequested).isAfter(END_WORKING_HOURS))
                 break;
 
-            if (!doesOverlapTimeSlot(startTime, endTime, date))
+            if (!doesOverlapTimeSlot(timeSlot, timeSlot.plusMinutes(durationRequested), date))
                 availableTimeSlots.add(timeSlot);
         }
 
@@ -80,14 +77,14 @@ public class AppointmentService {
         return slots;
     }
 
-    public boolean doesOverlapTimeSlot(LocalDateTime requestedStartTime, LocalDateTime requestedEndTime, LocalDate date) {
+    public boolean doesOverlapTimeSlot(LocalTime requestedStartTime, LocalTime requestedEndTime, LocalDate date) {
         List<AppointmentEntity> existingAppointments = appointmentRepository.findByStartAtBetween(date.atStartOfDay(), date.atTime(LocalTime.MAX));
 
         for (AppointmentEntity existingAppointment : existingAppointments) {
             int duration = existingAppointment.getServices().stream().mapToInt(ServiceEntity::getSlotTime).sum();
             LocalDateTime existingAppointmentEndTime = existingAppointment.getStartAt().plusMinutes(duration);
 
-            if (requestedStartTime.isBefore(existingAppointmentEndTime) && requestedEndTime.isAfter(existingAppointment.getStartAt()))
+            if (requestedStartTime.isBefore(existingAppointmentEndTime.toLocalTime()) && requestedEndTime.isAfter(existingAppointment.getStartAt().toLocalTime()))
                 return true;
         }
 

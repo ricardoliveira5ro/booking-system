@@ -1,13 +1,13 @@
 import { useMutation } from "@tanstack/react-query";
 
 import { AppointmentData } from "@/models/Appointment";
-import { formatLocalDateForBackend } from "@/utils/functions";
 
 export function useTimeSlots(appointmentFormData: AppointmentData) {
     return useMutation({
         mutationFn: async () => {
             const payload = {
-                appointmentDate: formatLocalDateForBackend(appointmentFormData.date),
+                appointmentDate: appointmentFormData.date.toISOString().split('T')[0],
+                appointmentTime: appointmentFormData.time,
                 services: appointmentFormData.services,
                 details: appointmentFormData.details,
             };
