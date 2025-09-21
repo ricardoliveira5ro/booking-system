@@ -1,3 +1,11 @@
+export function isToday(currentDate: Date): boolean {
+    const today = new Date();
+
+    return currentDate.getFullYear() === today.getFullYear() &&
+            currentDate.getMonth() === today.getMonth() &&
+            currentDate.getDate() === today.getDate();
+}
+
 export function roundUpToNext30Min(): { date: Date; time: string } {
     const now = new Date();
     const rounded = new Date(now);

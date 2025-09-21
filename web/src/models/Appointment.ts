@@ -8,6 +8,6 @@ type AppointmentDetails = {
 export type AppointmentData = {
     services: string[];
     date: Date;
-    time: string;
+    time: string | null;
     details: AppointmentDetails;
 }
