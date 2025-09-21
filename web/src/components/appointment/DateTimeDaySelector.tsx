@@ -6,8 +6,10 @@ export function DateTimeDaySelector({ days, onDayClick, isSelected }: {
     return (
         <div className="w-full overflow-x-auto scrollbar-hide">
             <div className="flex gap-x-4 flex-nowrap">
-                {days.map(({ dayNumber, weekday, date }) => (
-                    <button key={dayNumber} onClick={() => onDayClick(date)} className="flex flex-col items-center justify-center gap-y-2">
+                {days.map(({ dayNumber, weekday, date }, index) => (
+                    <button data-aos="fade-right" data-aos-duration="900" data-aos-delay={`${index * 50}`} key={`${dayNumber}-${weekday}-${index}`} 
+                            onClick={() => onDayClick(date)} className="flex flex-col items-center justify-center gap-y-2"
+                    >
                         <div className={`flex-shrink-0 w-[35px] h-[35px] leading-[35px] rounded-full text-center cursor-pointer 
                                             ${isSelected(date) ? "bg-[var(--orange)] text-white" : "bg-white text-black"}`}>
                             {dayNumber}

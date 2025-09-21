@@ -10,6 +10,8 @@ import org.modelmapper.TypeMap;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.time.LocalDateTime;
+
 @Configuration
 public class AppConfiguration {
 
@@ -19,7 +21,10 @@ public class AppConfiguration {
 
         modelMapper.typeMap(AppointmentRequestDTO.class, AppointmentEntity.class)
                 .addMappings(mapper -> {
-                    mapper.map(AppointmentRequestDTO::getAppointmentDate, AppointmentEntity::setStartAt);
+                    mapper.using(ctx -> {
+                        AppointmentRequestDTO src = (AppointmentRequestDTO) ctx.getSource();
+                        return LocalDateTime.of(src.getAppointmentDate(), src.getAppointmentTime());
+                    }).map(src -> src, AppointmentEntity::setStartAt);
                     mapper.map(src -> src.getDetails().getName(), AppointmentEntity::setClientName);
                     mapper.map(src -> src.getDetails().getEmail(), AppointmentEntity::setClientEmail);
                     mapper.map(src -> src.getDetails().getPhoneNumber(), AppointmentEntity::setPhoneNumber);

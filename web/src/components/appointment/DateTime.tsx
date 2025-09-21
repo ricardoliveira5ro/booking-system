@@ -5,6 +5,7 @@ import { useEffect } from "react";
 
 import { DateTimeCalendarHeader } from "@/components/appointment/DateTimeCalendarHeader";
 import { DateTimeDaySelector } from "@/components/appointment/DateTimeDaySelector";
+import { DateTimeSlotSkeleton } from "./DateTimeSlotSkeleton";
 
 import { useTimeSlots } from "@/hooks/useTimeSlots";
 import { useCalendar } from "@/hooks/useCalendar";
@@ -32,23 +33,27 @@ export default function DateTime({ appointmentFormData, setAppointmentFormData }
 
     function handleDayClick(clickedDate: Date) {
         const today = new Date();
-        const isToday =
-        clickedDate.getFullYear() === today.getFullYear() &&
-        clickedDate.getMonth() === today.getMonth() &&
-        clickedDate.getDate() === today.getDate();
+        const isToday = clickedDate.getFullYear() === today.getFullYear() &&
+                        clickedDate.getMonth() === today.getMonth() &&
+                        clickedDate.getDate() === today.getDate();
 
         let finalDate: Date;
+        let finalTime: string;
+        
         if (isToday) {
-            finalDate = roundUpToNext30Min();
-            if (finalDate.getHours() < 9) {
-                finalDate = new Date(finalDate.getFullYear(), finalDate.getMonth(), finalDate.getDate(), 9, 0, 0);
-            }
-            
+            const rounded = roundUpToNext30Min();
+            finalDate = new Date(rounded.date.getFullYear(), rounded.date.getMonth(), rounded.date.getDate(), Number(rounded.time.split(':')[0]), 0, 0);
+            finalTime = rounded.time;
         } else {
             finalDate = new Date(clickedDate.getFullYear(), clickedDate.getMonth(), clickedDate.getDate(), 9, 0, 0);
+            finalTime = "09:00";
         }
-
-        setAppointmentFormData((prev) => ({ ...prev, date: finalDate }));
+        
+        setAppointmentFormData(prev => ({
+            ...prev,
+            date: finalDate,
+            time: finalTime,
+        }));
     }
 
     function isSelectedDay(day: Date) {
@@ -73,15 +78,18 @@ export default function DateTime({ appointmentFormData, setAppointmentFormData }
                 isSelected={isSelectedDay} 
             />
             <div className="flex flex-1 flex-col pt-6 gap-y-6 overflow-y-auto scrollbar-hide">
-                {(!isPending && data) && data.map((timeSlot: any, index: number) => (
-                    <div key={index} className="flex flex-col gap-y-3">
-                        <div className="flex justify-between items-center">
-                            <span className="font-bold">{timeSlot}</span>
-                            <input type="radio" name="time" className="accent-[var(--orange)] cursor-pointer" />
+                {(isPending || !data) ?
+                    <DateTimeSlotSkeleton /> : 
+                    data.map((timeSlot: any, index: number) => (
+                        <div key={index} className="flex flex-col gap-y-3">
+                            <div className="flex justify-between items-center">
+                                <span className="font-bold">{timeSlot}</span>
+                                <input type="radio" name="time" className="accent-[var(--orange)] cursor-pointer" onClick={() => setAppointmentFormData((prev) => ({ ...prev, time: timeSlot }))} />
+                            </div>
+                            <hr />
                         </div>
-                        <hr />
-                    </div>
-                ))}
+                    ))
+                }
             </div>
         </main>
     );

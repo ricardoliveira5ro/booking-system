@@ -12,8 +12,8 @@ export function DateTimeCalendarHeader({ monthLabel, onPrev, onNext }: {
                 <span>{monthLabel}</span>
             </div>
             <div className="flex gap-x-2 items-center justify-center">
-                <MoveLeft onClick={onPrev} size={28} />
-                <MoveRight onClick={onNext} size={28} />
+                <MoveLeft onClick={onPrev} className="cursor-pointer" size={28} />
+                <MoveRight onClick={onNext} className="cursor-pointer" size={28} />
             </div>
         </div>
     );

@@ -7,7 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Getter
@@ -18,7 +19,10 @@ import java.util.List;
 public class AppointmentRequestDTO {
 
     @NotNull
-    private LocalDateTime appointmentDate;
+    private LocalDate appointmentDate;
+
+    @NotNull
+    private LocalTime appointmentTime;
 
     @NotNull
     private List<String> services;

@@ -1,7 +1,7 @@
 "use client"
 
 import { X } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 
@@ -20,9 +20,11 @@ export default function Appointment() {
     const t = useTranslations('appointment');
     const { step, back, next } = useAppointmentSteps();
 
+    const { date, time } = roundUpToNext30Min();
     const [appointmentFormData, setAppointmentFormData] = useState<AppointmentData>({
         services: [],
-        date: roundUpToNext30Min(),
+        date: date,
+        time: time,
         details: {
             name: "",
             email: "",
@@ -30,6 +32,12 @@ export default function Appointment() {
             message: "",
         },
     });
+    
+    const isNextButtonDisabled = useMemo(() => {
+        if (step === 1) return appointmentFormData.services.length === 0;
+        else if (step === 2) return appointmentFormData.services.length === 0 || !appointmentFormData.date || appointmentFormData.time === "" 
+
+    }, [appointmentFormData])
 
     return (
         <div className="grid grid-rows-[auto_1fr_auto] justify-items-center h-screen px-8 py-16 gap-y-12">
@@ -44,7 +52,7 @@ export default function Appointment() {
             }
             <footer className="flex items-center justify-between w-full px-2">
                 <button onClick={back} className="cursor-pointer font-sans border rounded-lg px-4 py-1">{t('backButton')}</button>
-                <button onClick={next} className="cursor-pointer font-sans rounded-lg px-4 py-1 bg-[var(--orange)]">{t('continueButton')}</button>
+                <button disabled={isNextButtonDisabled} onClick={next} className="cursor-pointer font-sans rounded-lg px-4 py-1 bg-[var(--orange)]">{t('continueButton')}</button>
             </footer>
         </div>
     );
