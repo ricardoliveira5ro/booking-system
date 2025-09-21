@@ -13,8 +13,15 @@
         "step1": "Select service",
         "step2": "Select date and time",
         "step3": "Enter you details",
+        "step4": "Appointment Review",
         "backButton": "Back",
         "continueButton": "Continue",
+        "saveButton": "Book Appointment",
+        "services": {
+            "HC": "Hair Cut",
+            "BT": "Beard Trimming",
+            "HT": "Hair Treatment"
+        },
         "days": {
             "0": "Sun",
             "1": "Mon",
@@ -41,6 +48,8 @@
         "name": "Your Name",
         "email": "Email",
         "phone": "Phone Number",
-        "details": "Specific details"
+        "details": "Specific details",
+        "when": "When",
+        "contact": "Contact"
     }
 }

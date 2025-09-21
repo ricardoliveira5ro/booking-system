@@ -6,10 +6,8 @@ export function useAppointmentSteps() {
     const router = useRouter();
 
     const next = () => {
-        if (step + 1 > 3) {
-            // Handle confirmation
+        if (step + 1 > 4)
             router.replace("/");
-        }
         else 
             setStep((prev) => prev + 1);
     };

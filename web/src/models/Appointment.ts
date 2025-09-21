@@ -1,3 +1,10 @@
+type AppointmentService = {
+    code: string;
+    name: string;
+    price: number
+    slotTime: string;
+}
+
 type AppointmentDetails = {
     name: string;
     email: string;
@@ -6,7 +13,7 @@ type AppointmentDetails = {
 }
 
 export type AppointmentData = {
-    services: string[];
+    services: AppointmentService[];
     date: Date;
     time: string | null;
     details: AppointmentDetails;

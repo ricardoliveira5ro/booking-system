@@ -15,12 +15,10 @@ import { AppointmentData } from "@/models/Appointment";
 
 import '../../app/appointment/appointment.css'
 
-type Props = {
+export default function DateTime({ appointmentFormData, setAppointmentFormData }: {
     appointmentFormData: AppointmentData;
     setAppointmentFormData: React.Dispatch<React.SetStateAction<AppointmentData>>;
-};
-
-export default function DateTime({ appointmentFormData, setAppointmentFormData }: Props) {
+}) {
 
     const t = useTranslations('appointment');
 
@@ -69,7 +67,7 @@ export default function DateTime({ appointmentFormData, setAppointmentFormData }
                 {(isPending || !data) ?
                     <DateTimeSlotSkeleton /> : 
                     data.map((timeSlot: any, index: number) => (
-                        <div key={index} className="flex flex-col gap-y-3" onClick={() => setAppointmentFormData((prev) => ({ ...prev, time: timeSlot }))}>
+                        <div key={index} className="flex flex-col gap-y-3 cursor-pointer" onClick={() => setAppointmentFormData((prev) => ({ ...prev, time: timeSlot }))}>
                             <div className="flex justify-between items-center">
                                 <span className="font-bold">{timeSlot}</span>
                                 <input type="radio" name="time" className="accent-[var(--orange)] pointer-events-none" checked={appointmentFormData.time === timeSlot} readOnly />

@@ -13,8 +13,15 @@
         "step1": "Escolhe o serviço",
         "step2": "Escolhe a data e hora",
         "step3": "Introduz os teus detalhes",
+        "step4": "Confirmação",
         "backButton": "Voltar",
         "continueButton": "Continuar",
+        "saveButton": "Concluir Marcação",
+        "services": {
+            "HC": "Corte de cabelo",
+            "BT": "Aparar a barba",
+            "HT": "Tratamento de cabelo"
+        },
         "days": {
             "0": "Dom",
             "1": "Seg",
@@ -41,6 +48,8 @@
         "name": "Nome",
         "email": "Email",
         "phone": "Telemóvel",
-        "details": "Detalhes specificos"
+        "details": "Detalhes specificos",
+        "when": "Quando",
+        "contact": "Contacto"
     }
 }

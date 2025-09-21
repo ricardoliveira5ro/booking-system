@@ -9,7 +9,7 @@ export function useTimeSlots(appointmentFormData: AppointmentData) {
             const payload = {
                 appointmentDate: appointmentFormData.date.toISOString().split('T')[0],
                 appointmentTime: appointmentFormData.time || (isToday(appointmentFormData.date) ? roundUpToNext30Min().time : "09:00"),
-                services: appointmentFormData.services,
+                services: appointmentFormData.services.map(s => s.code),
                 details: appointmentFormData.details,
             };
 
