@@ -20,11 +20,11 @@ export default function Appointment() {
     const t = useTranslations('appointment');
     const { step, back, next } = useAppointmentSteps();
 
-    const { date, time } = roundUpToNext30Min();
+    const { date } = roundUpToNext30Min();
     const [appointmentFormData, setAppointmentFormData] = useState<AppointmentData>({
         services: [],
         date: date,
-        time: time,
+        time: null,
         details: {
             name: "",
             email: "",
@@ -35,9 +35,9 @@ export default function Appointment() {
     
     const isNextButtonDisabled = useMemo(() => {
         if (step === 1) return appointmentFormData.services.length === 0;
-        else if (step === 2) return appointmentFormData.services.length === 0 || !appointmentFormData.date || appointmentFormData.time === "" 
+        else if (step === 2) return appointmentFormData.services.length === 0 || !appointmentFormData.date || !appointmentFormData.time
 
-    }, [appointmentFormData])
+    }, [appointmentFormData, step])
 
     return (
         <div className="grid grid-rows-[auto_1fr_auto] justify-items-center h-screen px-8 py-16 gap-y-12">
