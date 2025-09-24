@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Arrays;
 
 @Component
 public class AppointmentDTOValidator implements ConstraintValidator<ValidAppointmentDTO, AppointmentRequestDTO> {
@@ -20,6 +21,13 @@ public class AppointmentDTOValidator implements ConstraintValidator<ValidAppoint
 
     @Autowired
     private AppointmentService appointmentService;
+
+    private Class<?>[] groups;
+
+    @Override
+    public void initialize(ValidAppointmentDTO constraintAnnotation) {
+        this.groups = constraintAnnotation.groups();
+    }
 
     // To be replaced by configs
     private static final LocalTime START_WORKING_HOURS = LocalTime.of(9, 0);
@@ -53,7 +61,7 @@ public class AppointmentDTOValidator implements ConstraintValidator<ValidAppoint
             isValid = false;
         }
 
-        if (doesOverlapTimeSlot(appointmentRequestDTO)) {
+        if (Arrays.asList(groups).contains(CreateAppointment.class) && doesOverlapTimeSlot(appointmentRequestDTO)) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("This appointment time is already booked")
                     .addPropertyNode("appointmentDate")
