@@ -3,6 +3,7 @@
 import { X } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { ToastContainer } from "react-toastify";
 import Link from "next/link";
 
 import CircularStepProgress from "../../components/appointment/CircularStepProgress";
@@ -50,23 +51,26 @@ export default function Appointment() {
     }
 
     return (
-        <div className="grid grid-rows-[auto_1fr_auto] justify-items-center h-screen px-8 py-16 gap-y-12">
-            <header className="flex items-center justify-between w-full">
-                <CircularStepProgress currentStep={step} totalSteps={4} size={60} strokeWidth={4.5} />
-                <h1 className="font-sans text-2xl text-center">{t(`step${step}`)}</h1>
-                <Link href={'/'}><X className="cursor-pointer" size={32} /></Link>
-            </header>
-            {step === 1 ? <Service appointmentFormData={appointmentFormData} setAppointmentFormData={setAppointmentFormData} /> :
-              step === 2 ? <DateTime appointmentFormData={appointmentFormData} setAppointmentFormData={setAppointmentFormData} /> :
-              step === 3 ? <Details appointmentFormData={appointmentFormData} setAppointmentFormData={setAppointmentFormData} /> :
-                            <AppointmentReview appointmentFormData={appointmentFormData} navigateBack={back} />
-            }
-            {step < 4 &&
-                <footer className="flex items-center justify-between w-full px-2">
-                    <button onClick={back} className="cursor-pointer font-sans border rounded-lg px-4 py-1">{t('backButton')}</button>
-                    <button disabled={isNextButtonDisabled} onClick={next} className="cursor-pointer font-sans rounded-lg px-4 py-1 bg-[var(--orange)]">{t('continueButton')}</button>
-                </footer>
-            }
+        <div>
+            <ToastContainer className="px-8 py-2" />
+            <div className="grid grid-rows-[auto_1fr_auto] justify-items-center h-screen px-8 py-16 gap-y-12">
+                <header className="flex items-center justify-between w-full">
+                    <CircularStepProgress currentStep={step} totalSteps={4} size={60} strokeWidth={4.5} />
+                    <h1 className="font-sans text-2xl text-center">{t(`step${step}`)}</h1>
+                    <Link href={'/'}><X className="cursor-pointer" size={32} /></Link>
+                </header>
+                {step === 1 ? <Service appointmentFormData={appointmentFormData} setAppointmentFormData={setAppointmentFormData} /> :
+                step === 2 ? <DateTime appointmentFormData={appointmentFormData} setAppointmentFormData={setAppointmentFormData} /> :
+                step === 3 ? <Details appointmentFormData={appointmentFormData} setAppointmentFormData={setAppointmentFormData} /> :
+                                <AppointmentReview appointmentFormData={appointmentFormData} navigateBack={back} />
+                }
+                {step < 4 &&
+                    <footer className="flex items-center justify-between w-full px-2">
+                        <button onClick={back} className="cursor-pointer font-sans border rounded-lg px-4 py-1">{t('backButton')}</button>
+                        <button disabled={isNextButtonDisabled} onClick={next} className="cursor-pointer font-sans rounded-lg px-4 py-1 bg-[var(--orange)]">{t('continueButton')}</button>
+                    </footer>
+                }
+            </div>
         </div>
     );
 }

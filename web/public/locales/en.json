@@ -50,6 +50,12 @@
         "phone": "Phone Number",
         "details": "Specific details",
         "when": "When",
-        "contact": "Contact"
+        "contact": "Contact",
+        "apiError": "Something went wrong",
+        "apiRetryButton": "Try again"
+    },
+    "errors": {
+        "general": "Service unavailable",
+        "400": "An unexpected error occurred"
     }
 }
