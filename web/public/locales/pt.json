@@ -50,6 +50,12 @@
         "phone": "Telemóvel",
         "details": "Detalhes specificos",
         "when": "Quando",
-        "contact": "Contacto"
+        "contact": "Contacto",
+        "apiError": "Algo correu mal",
+        "apiRetryButton": "Tentar novamente"
+    },
+    "errors": {
+        "general": "Serviço indisponível",
+        "400": "Ocorreu um erro inesperado"
     }
 }
