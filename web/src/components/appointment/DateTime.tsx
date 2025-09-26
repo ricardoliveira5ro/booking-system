@@ -2,10 +2,13 @@
 
 import { useTranslations } from "next-intl";
 import { useEffect } from "react";
+import { Slide, toast } from "react-toastify";
+import { SearchX } from "lucide-react";
 
 import { DateTimeCalendarHeader } from "@/components/appointment/DateTimeCalendarHeader";
 import { DateTimeDaySelector } from "@/components/appointment/DateTimeDaySelector";
 import { DateTimeSlotSkeleton } from "./DateTimeSlotSkeleton";
+import APICallError from "../APICallError";
 
 import { useTimeSlots } from "@/hooks/useTimeSlots";
 import { useCalendar } from "@/hooks/useCalendar";
@@ -23,7 +26,7 @@ export default function DateTime({ appointmentFormData, setAppointmentFormData }
     const t = useTranslations('appointment');
 
     const { displayedMonth, daysLeft, goPrev, goNext } = useCalendar(appointmentFormData.date);
-    const { mutate, data, isPending } = useTimeSlots(appointmentFormData);
+    const { mutate, data = [], isPending, isError, error } = useTimeSlots(appointmentFormData);
 
     useEffect(() => {
         mutate();
@@ -50,6 +53,22 @@ export default function DateTime({ appointmentFormData, setAppointmentFormData }
             sel.getDate() === day.getDate()
         );
     }
+
+    useEffect(() => {
+        if (isError) {
+            toast.error(error.message, {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: false,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Slide,
+            });
+        }
+    }, [isError])
     
     return (
         <main className="flex flex-col w-full h-full min-h-0 min-w-0 pt-4 px-2 gap-y-6">
@@ -64,17 +83,24 @@ export default function DateTime({ appointmentFormData, setAppointmentFormData }
                 isSelected={isSelectedDay} 
             />
             <div className="flex flex-1 flex-col pt-6 gap-y-6 overflow-y-auto scrollbar-hide">
-                {(isPending || !data) ?
-                    <DateTimeSlotSkeleton /> : 
-                    data.map((timeSlot: any, index: number) => (
-                        <div key={index} className="flex flex-col gap-y-3 cursor-pointer" onClick={() => setAppointmentFormData((prev) => ({ ...prev, time: timeSlot }))}>
-                            <div className="flex justify-between items-center">
-                                <span className="font-bold">{timeSlot}</span>
-                                <input type="radio" name="time" className="accent-[var(--orange)] pointer-events-none" checked={appointmentFormData.time === timeSlot} readOnly />
-                            </div>
-                            <hr />
-                        </div>
-                    ))
+                {isPending ?
+                    <DateTimeSlotSkeleton /> :
+                    isError ?
+                        <APICallError retry={mutate} /> :
+                        data.length === 0 ?
+                            <div className='flex w-full items-center gap-x-2'>
+                                <SearchX color='#FE5F55' />
+                                <span>{t('noTimeSlotsAvailable')}</span>
+                            </div> :
+                            data.map((timeSlot: any, index: number) => (
+                                <div key={index} className="flex flex-col gap-y-3 cursor-pointer" onClick={() => setAppointmentFormData((prev) => ({ ...prev, time: timeSlot }))}>
+                                    <div className="flex justify-between items-center">
+                                        <span className="font-bold">{timeSlot}</span>
+                                        <input type="radio" name="time" className="accent-[var(--orange)] pointer-events-none" checked={appointmentFormData.time === timeSlot} readOnly />
+                                    </div>
+                                    <hr />
+                                </div>
+                            ))
                 }
             </div>
         </main>

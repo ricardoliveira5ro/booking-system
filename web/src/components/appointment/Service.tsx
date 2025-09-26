@@ -6,8 +6,9 @@ import { useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { ServiceSkeleton } from './ServiceSkeleton';
+import APICallError from '../APICallError';
+
 import { AppointmentData } from '@/models/Appointment';
-import { TriangleAlert } from 'lucide-react';
 
 export default function Service({ appointmentFormData, setAppointmentFormData }: {
     appointmentFormData: AppointmentData;
@@ -36,8 +37,7 @@ export default function Service({ appointmentFormData, setAppointmentFormData }:
     })
 
     useEffect(() => {
-        console.log(error)
-        if (isError) 
+        if (isError) {
             toast.error(error.message, {
                 position: "top-center",
                 autoClose: 5000,
@@ -49,6 +49,7 @@ export default function Service({ appointmentFormData, setAppointmentFormData }:
                 theme: "dark",
                 transition: Slide,
             });
+        }
     }, [isError])
 
     const toggleService = (service: { code: string; name: string; price: number; slotTime: string }, checked: boolean) => {
@@ -63,13 +64,7 @@ export default function Service({ appointmentFormData, setAppointmentFormData }:
             {isPending ? 
                 <ServiceSkeleton /> : 
                 isError ?
-                    <div className='flex flex-col w-full justify-center items-center gap-y-4'>
-                        <div className='flex gap-x-4'>
-                            <TriangleAlert color='yellow' />
-                            <span>{t('apiError')}</span>
-                        </div>
-                        <button onClick={() => refetch()} className='rounded-lg py-1 px-6 bg-[var(--orange)]'>{t('apiRetryButton')}</button>
-                    </div> :
+                    <APICallError retry={refetch} /> :
                     data.map((service: any, index: number) => (
                         <div key={service.code} data-aos="fade-right" data-aos-duration="900" data-aos-delay={`${index * 100}`}>
                             <div className="flex pb-4 gap-x-4">
