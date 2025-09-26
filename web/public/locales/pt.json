@@ -51,10 +51,11 @@
         "details": "Detalhes specificos",
         "when": "Quando",
         "contact": "Contacto",
-        "apiError": "Algo correu mal",
-        "apiRetryButton": "Tentar novamente"
+        "noTimeSlotsAvailable": "Não existem horários disponíveis"
     },
     "errors": {
+        "apiError": "Algo correu mal",
+        "apiRetryButton": "Tentar novamente",
         "general": "Serviço indisponível",
         "400": "Ocorreu um erro inesperado"
     }

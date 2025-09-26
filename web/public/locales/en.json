@@ -51,10 +51,11 @@
         "details": "Specific details",
         "when": "When",
         "contact": "Contact",
-        "apiError": "Something went wrong",
-        "apiRetryButton": "Try again"
+        "noTimeSlotsAvailable": "No time slots available"
     },
     "errors": {
+        "apiError": "Something went wrong",
+        "apiRetryButton": "Try again",
         "general": "Service unavailable",
         "400": "An unexpected error occurred"
     }
