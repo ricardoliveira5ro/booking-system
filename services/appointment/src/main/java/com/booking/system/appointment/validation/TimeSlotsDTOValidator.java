@@ -1,0 +1,70 @@
+package com.booking.system.appointment.validation;
+
+import com.booking.system.appointment.dto.ServiceDTO;
+import com.booking.system.appointment.dto.TimeSlotsRequestDTO;
+import com.booking.system.appointment.service.ServiceService;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+
+@Component
+public class TimeSlotsDTOValidator implements ConstraintValidator<ValidTimeSlotsDTO, TimeSlotsRequestDTO> {
+
+    @Autowired
+    private ServiceService serviceService;
+
+    // To be replaced by configs
+    private static final LocalTime START_WORKING_HOURS = LocalTime.of(9, 0);
+    private static final LocalTime END_WORKING_HOURS = LocalTime.of(19, 30);
+
+    @Override
+    public boolean isValid(TimeSlotsRequestDTO timeSlotsRequestDTO, ConstraintValidatorContext context) {
+        if (timeSlotsRequestDTO.getAppointmentDate().isBefore(LocalDate.now())) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("INVALID_APPOINTMENT_DATE")
+                    .addPropertyNode("appointmentDate")
+                    .addConstraintViolation();
+
+            return false;
+        }
+
+        if ((timeSlotsRequestDTO.getAppointmentDate().isEqual(LocalDate.now()) && timeSlotsRequestDTO.getAppointmentTime().isBefore(LocalTime.now().minusMinutes(1))) ||
+            timeSlotsRequestDTO.getAppointmentTime().isBefore(START_WORKING_HOURS) ||
+            timeSlotsRequestDTO.getAppointmentTime().isAfter(END_WORKING_HOURS) ||
+            isAppointmentTimeEndsAfterHours(timeSlotsRequestDTO)
+        ) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("INVALID_APPOINTMENT_TIME")
+                    .addPropertyNode("appointmentTime")
+                    .addConstraintViolation();
+
+            return false;
+        }
+
+        if (timeSlotsRequestDTO.getServices().isEmpty() ||
+            serviceService.getServicesByCode(timeSlotsRequestDTO.getServices()).size() != timeSlotsRequestDTO.getServices().size()
+        ) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("INVALID_SERVICES")
+                    .addPropertyNode("services")
+                    .addConstraintViolation();
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean isAppointmentTimeEndsAfterHours(TimeSlotsRequestDTO timeSlotsRequestDTO) {
+        int duration = serviceService.getServicesByCode(timeSlotsRequestDTO.getServices())
+                .stream().mapToInt(ServiceDTO::getSlotTime).sum();
+
+        LocalTime endTime = timeSlotsRequestDTO.getAppointmentTime().plusMinutes(duration);
+
+        return endTime.isAfter(END_WORKING_HOURS);
+    }
+}

@@ -3,6 +3,7 @@ package com.booking.system.appointment.service;
 import com.booking.system.appointment.dto.AppointmentDTO;
 import com.booking.system.appointment.dto.AppointmentRequestDTO;
 import com.booking.system.appointment.dto.ServiceDTO;
+import com.booking.system.appointment.dto.TimeSlotsRequestDTO;
 import com.booking.system.appointment.repository.AppointmentRepository;
 import com.booking.system.database.entity.AppointmentEntity;
 import com.booking.system.database.entity.ServiceEntity;
@@ -44,10 +45,10 @@ public class AppointmentService {
         return modelMapper.map(appointmentRepository.save(appointment), AppointmentDTO.class);
     }
 
-    public List<LocalTime> getAvailableTimeSlots(AppointmentRequestDTO appointmentRequest) {
-        LocalDate date = appointmentRequest.getAppointmentDate();
+    public List<LocalTime> getAvailableTimeSlots(TimeSlotsRequestDTO timeSlotsRequestDTO) {
+        LocalDate date = timeSlotsRequestDTO.getAppointmentDate();
 
-        int durationRequested = serviceService.getServicesByCode(appointmentRequest.getServices())
+        int durationRequested = serviceService.getServicesByCode(timeSlotsRequestDTO.getServices())
                                                 .stream().mapToInt(ServiceDTO::getSlotTime).sum();
 
         List<LocalTime> availableTimeSlots = new ArrayList<>();

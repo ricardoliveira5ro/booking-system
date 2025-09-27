@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ErrorResponse {
 
-    private final int code;
+    private final String code;
     private final String message;
     private final String details;
     private final List<String> stackTrace;

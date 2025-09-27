@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Arrays;
 
 @Component
 public class AppointmentDTOValidator implements ConstraintValidator<ValidAppointmentDTO, AppointmentRequestDTO> {
@@ -22,31 +21,20 @@ public class AppointmentDTOValidator implements ConstraintValidator<ValidAppoint
     @Autowired
     private AppointmentService appointmentService;
 
-    private Class<?>[] groups;
-
-    @Override
-    public void initialize(ValidAppointmentDTO constraintAnnotation) {
-        this.groups = constraintAnnotation.groups();
-    }
-
     // To be replaced by configs
     private static final LocalTime START_WORKING_HOURS = LocalTime.of(9, 0);
     private static final LocalTime END_WORKING_HOURS = LocalTime.of(19, 30);
 
     @Override
     public boolean isValid(AppointmentRequestDTO appointmentRequestDTO, ConstraintValidatorContext context) {
-        boolean isValid = true;
-
         if (appointmentRequestDTO.getAppointmentDate().isBefore(LocalDate.now())) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("Invalid appointment date")
+            context.buildConstraintViolationWithTemplate("INVALID_APPOINTMENT_DATE")
                     .addPropertyNode("appointmentDate")
                     .addConstraintViolation();
 
-            isValid = false;
+            return false;
         }
-
-        System.out.println();
 
         if ((appointmentRequestDTO.getAppointmentDate().isEqual(LocalDate.now()) && appointmentRequestDTO.getAppointmentTime().isBefore(LocalTime.now().minusMinutes(1))) ||
             appointmentRequestDTO.getAppointmentTime().isBefore(START_WORKING_HOURS) ||
@@ -54,34 +42,45 @@ public class AppointmentDTOValidator implements ConstraintValidator<ValidAppoint
             isAppointmentTimeEndsAfterHours(appointmentRequestDTO)
         ) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("Invalid appointment time")
+            context.buildConstraintViolationWithTemplate("INVALID_APPOINTMENT_TIME")
                     .addPropertyNode("appointmentTime")
                     .addConstraintViolation();
 
-            isValid = false;
+            return false;
         }
 
-        if (Arrays.asList(groups).contains(CreateAppointment.class) && doesOverlapTimeSlot(appointmentRequestDTO)) {
+        if (doesOverlapTimeSlot(appointmentRequestDTO)) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("This appointment time is already booked")
+            context.buildConstraintViolationWithTemplate("APPOINTMENT_ALREADY_BOOKED")
                     .addPropertyNode("appointmentDate")
                     .addConstraintViolation();
 
-            isValid = false;
+            return false;
         }
 
         if (appointmentRequestDTO.getServices().isEmpty() ||
             serviceService.getServicesByCode(appointmentRequestDTO.getServices()).size() != appointmentRequestDTO.getServices().size()
         ) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("Invalid services")
+            context.buildConstraintViolationWithTemplate("INVALID_SERVICES")
                     .addPropertyNode("services")
                     .addConstraintViolation();
 
-            isValid = false;
+            return false;
         }
 
-        return isValid;
+        if (appointmentRequestDTO.getDetails().getName().isBlank() &&
+            (appointmentRequestDTO.getDetails().getEmail().isBlank() || appointmentRequestDTO.getDetails().getPhoneNumber() == null)
+        ) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("INVALID_DETAILS")
+                    .addPropertyNode("details")
+                    .addConstraintViolation();
+
+            return false;
+        }
+
+        return true;
     }
 
     private boolean isAppointmentTimeEndsAfterHours(AppointmentRequestDTO appointmentRequestDTO) {

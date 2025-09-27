@@ -17,7 +17,7 @@ export default function Details({ appointmentFormData, setAppointmentFormData }:
             <input value={appointmentFormData.details.email} onChange={(e) => setAppointmentFormData((prev) => ({ ...prev, details: { ...prev.details, email: e.target.value } }))}
                     type="text" placeholder={t('email')} className="px-4 py-1.5 rounded-lg border border-white" />
             <input value={appointmentFormData.details.phoneNumber} onChange={(e) => setAppointmentFormData((prev) => ({ ...prev, details: { ...prev.details, phoneNumber: e.target.value } }))}
-                    type="text" placeholder={t('phone')} className="px-4 py-1.5 rounded-lg border border-white" />
+                    type="number" placeholder={t('phone')} className="px-4 py-1.5 rounded-lg border border-white" />
             <textarea value={appointmentFormData.details.message} onChange={(e) => setAppointmentFormData((prev) => ({ ...prev, details: { ...prev.details, message: e.target.value } }))}
                     placeholder={t('details')} name="details" id="details" className="resize-none h-1/3 px-4 py-2 rounded-lg border border-white scrollbar-hide"></textarea>
         </main>

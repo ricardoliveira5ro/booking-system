@@ -1,7 +1,10 @@
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { Slide, toast } from "react-toastify";
+
 import { AppointmentData } from "@/models/Appointment";
 import { useCreateAppointment } from "@/hooks/useCreateAppointment";
-import { useRouter } from "next/navigation";
 
 export default function AppointmentReview({ appointmentFormData, navigateBack }: {
     appointmentFormData: AppointmentData;
@@ -13,9 +16,25 @@ export default function AppointmentReview({ appointmentFormData, navigateBack }:
 
     const { mutate } = useCreateAppointment(appointmentFormData);
     const handleCreateAppointment = () => {
-        mutate();
-        router.replace('/');
-    }
+        mutate(undefined, {
+            onSuccess: () => {
+                router.replace('/');
+            },
+            onError: (err: any) => {
+                toast.error(err.message, {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: false,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Slide,
+                });
+            }
+        });
+    };
 
     return (
         <>

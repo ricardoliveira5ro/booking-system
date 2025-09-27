@@ -56,7 +56,12 @@
     "errors": {
         "apiError": "Something went wrong",
         "apiRetryButton": "Try again",
-        "general": "Service unavailable",
-        "400": "An unexpected error occurred"
+        "apiNoService": "Service unavailable",
+        "GENERAL": "An unexpected error occurred",
+        "INVALID_APPOINTMENT_DATE": "Invalid Appointment Date",
+        "INVALID_APPOINTMENT_TIME": "Invalid Appointment Time",
+        "INVALID_SERVICES": "Invalid Services",
+        "INVALID_DETAILS": "Invalid Appointment Details",
+        "APPOINTMENT_ALREADY_BOOKED": "Appointment already booked"
     }
 }

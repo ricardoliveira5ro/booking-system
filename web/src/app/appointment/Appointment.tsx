@@ -44,19 +44,17 @@ export default function Appointment() {
 
     
     function isDetailsEmpty(): boolean {
-        return appointmentFormData.details.email === "" ||
-                appointmentFormData.details.name === "" ||
-                appointmentFormData.details.phoneNumber === "" ||
-                appointmentFormData.details.message === "";
+        return appointmentFormData.details.name === "" ||
+                (appointmentFormData.details.email === "" && appointmentFormData.details.phoneNumber === "")
     }
 
     return (
         <div>
             <ToastContainer className="px-8 py-2" />
             <div className="grid grid-rows-[auto_1fr_auto] justify-items-center h-screen px-8 py-16 gap-y-12">
-                <header className="flex items-center justify-between w-full">
+                <header className="flex items-center w-full">
                     <CircularStepProgress currentStep={step} totalSteps={4} size={60} strokeWidth={4.5} />
-                    <h1 className="font-sans text-2xl text-center">{t(`step${step}`)}</h1>
+                    <h1 className="flex-1 text-center font-sans text-2xl">{t(`step${step}`)}</h1>
                     <Link href={'/'}><X className="cursor-pointer" size={32} /></Link>
                 </header>
                 {step === 1 ? <Service appointmentFormData={appointmentFormData} setAppointmentFormData={setAppointmentFormData} /> :

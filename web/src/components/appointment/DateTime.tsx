@@ -56,6 +56,8 @@ export default function DateTime({ appointmentFormData, setAppointmentFormData }
 
     useEffect(() => {
         if (isError) {
+            console.log("DateTime")
+            console.log(error)
             toast.error(error.message, {
                 position: "top-center",
                 autoClose: 5000,
