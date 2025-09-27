@@ -22,8 +22,5 @@ public class TimeSlotsRequestDTO {
     private LocalDate appointmentDate;
 
     @NotNull
-    private LocalTime appointmentTime;
-
-    @NotNull
     private List<String> services;
 }
