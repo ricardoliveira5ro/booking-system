@@ -3,7 +3,6 @@
 import { X } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import { ToastContainer } from "react-toastify";
 import Link from "next/link";
 
 import CircularStepProgress from "../../components/appointment/CircularStepProgress";
@@ -50,7 +49,6 @@ export default function Appointment() {
 
     return (
         <div>
-            <ToastContainer className="px-8 py-2" />
             <div className="grid grid-rows-[auto_1fr_auto] justify-items-center h-screen px-8 py-16 gap-y-12">
                 <header className="flex items-center w-full">
                     <CircularStepProgress currentStep={step} totalSteps={4} size={60} strokeWidth={4.5} />

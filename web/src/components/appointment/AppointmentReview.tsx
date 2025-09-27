@@ -1,6 +1,5 @@
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { Slide, toast } from "react-toastify";
 
 import { AppointmentData } from "@/models/Appointment";
@@ -19,6 +18,22 @@ export default function AppointmentReview({ appointmentFormData, navigateBack }:
         mutate(undefined, {
             onSuccess: () => {
                 router.replace('/');
+                toast.success(t("createSuccessMessage", {
+                        weekday: t(`daysExtended.${appointmentFormData.date.getDay()}`),
+                        day: appointmentFormData.date.getDate(),
+                        month: t(`months.${appointmentFormData.date.getMonth()}`),
+                        time: appointmentFormData.time ?? "09:00",
+                    }), {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: false,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Slide,
+                });
             },
             onError: (err: any) => {
                 toast.error(err.message, {

@@ -31,6 +31,15 @@
             "5": "Sex",
             "6": "Sab"
         },
+        "daysExtended": {
+            "0": "Domingo",
+            "1": "Segunda",
+            "2": "Terça",
+            "3": "Quarta",
+            "4": "Quinta",
+            "5": "Sexta",
+            "6": "Sábado"
+        },
         "months": {
             "0": "Janeiro",
             "1": "Fevereiro",
@@ -51,7 +60,8 @@
         "details": "Detalhes specificos",
         "when": "Quando",
         "contact": "Contacto",
-        "noTimeSlotsAvailable": "Não existem horários disponíveis"
+        "noTimeSlotsAvailable": "Não existem horários disponíveis",
+        "createSuccessMessage": "Marcação confirmada para {weekday} {day} de {month}, às {time}"
     },
     "errors": {
         "apiError": "Algo correu mal",
