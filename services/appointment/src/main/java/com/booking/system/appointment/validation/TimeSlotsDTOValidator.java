@@ -1,6 +1,5 @@
 package com.booking.system.appointment.validation;
 
-import com.booking.system.appointment.dto.ServiceDTO;
 import com.booking.system.appointment.dto.TimeSlotsRequestDTO;
 import com.booking.system.appointment.service.ServiceService;
 import jakarta.validation.ConstraintValidator;
@@ -32,19 +31,6 @@ public class TimeSlotsDTOValidator implements ConstraintValidator<ValidTimeSlots
             return false;
         }
 
-        if ((timeSlotsRequestDTO.getAppointmentDate().isEqual(LocalDate.now()) && timeSlotsRequestDTO.getAppointmentTime().isBefore(LocalTime.now().minusMinutes(1))) ||
-            timeSlotsRequestDTO.getAppointmentTime().isBefore(START_WORKING_HOURS) ||
-            timeSlotsRequestDTO.getAppointmentTime().isAfter(END_WORKING_HOURS) ||
-            isAppointmentTimeEndsAfterHours(timeSlotsRequestDTO)
-        ) {
-            context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("INVALID_APPOINTMENT_TIME")
-                    .addPropertyNode("appointmentTime")
-                    .addConstraintViolation();
-
-            return false;
-        }
-
         if (timeSlotsRequestDTO.getServices().isEmpty() ||
             serviceService.getServicesByCode(timeSlotsRequestDTO.getServices()).size() != timeSlotsRequestDTO.getServices().size()
         ) {
@@ -57,14 +43,5 @@ public class TimeSlotsDTOValidator implements ConstraintValidator<ValidTimeSlots
         }
 
         return true;
-    }
-
-    private boolean isAppointmentTimeEndsAfterHours(TimeSlotsRequestDTO timeSlotsRequestDTO) {
-        int duration = serviceService.getServicesByCode(timeSlotsRequestDTO.getServices())
-                .stream().mapToInt(ServiceDTO::getSlotTime).sum();
-
-        LocalTime endTime = timeSlotsRequestDTO.getAppointmentTime().plusMinutes(duration);
-
-        return endTime.isAfter(END_WORKING_HOURS);
     }
 }

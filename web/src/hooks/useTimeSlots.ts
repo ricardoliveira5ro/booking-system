@@ -2,7 +2,6 @@ import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
 import { AppointmentData } from "@/models/Appointment";
-import { isToday, roundUpToNext30Min } from "@/utils/functions";
 
 export function useTimeSlots(appointmentFormData: AppointmentData) {
 
@@ -13,7 +12,6 @@ export function useTimeSlots(appointmentFormData: AppointmentData) {
             try {
                 const payload = {
                     appointmentDate: appointmentFormData.date.toISOString().split('T')[0],
-                    appointmentTime: appointmentFormData.time || (isToday(appointmentFormData.date) ? roundUpToNext30Min().time : "09:00"),
                     services: appointmentFormData.services.map(s => s.code)
                 };
     
