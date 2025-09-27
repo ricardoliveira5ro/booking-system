@@ -23,14 +23,18 @@ export default function Service({ appointmentFormData, setAppointmentFormData }:
         queryFn: async () => {
             try {
                 const res = await fetch('http://localhost:8081/api/appointment/services')
-
+                const data = await res.json();
+    
                 if (!res.ok)
-                    throw new Error(errors(`${res.status}`));
+                    throw new Error(errors(`${data.code || 'GENERAL'}`));
+    
+                return data;
 
-                return res.json();
-
-            } catch (err: any) {
-                throw new Error(errors('general'))
+            } catch (err) {
+                if (err instanceof TypeError) // Network Error
+                    throw new Error(errors('apiNoService'));
+                
+                throw err;
             }
         },
         retry: 0

@@ -56,7 +56,12 @@
     "errors": {
         "apiError": "Algo correu mal",
         "apiRetryButton": "Tentar novamente",
-        "general": "Serviço indisponível",
-        "400": "Ocorreu um erro inesperado"
+        "apiNoService": "Serviço indisponível",
+        "GENERAL": "Ocorreu um erro inesperado",
+        "INVALID_APPOINTMENT_DATE": "Data de marcação inválida",
+        "INVALID_APPOINTMENT_TIME": "Hora de marcação inválida",
+        "INVALID_SERVICES": "Serviço inválido",
+        "INVALID_DETAILS": "Detalhes de marcação inválidos",
+        "APPOINTMENT_ALREADY_BOOKED": "Horário já foi escolhido"
     }
 }

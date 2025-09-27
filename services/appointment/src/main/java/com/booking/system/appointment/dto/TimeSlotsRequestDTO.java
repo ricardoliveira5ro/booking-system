@@ -1,7 +1,6 @@
 package com.booking.system.appointment.dto;
 
-import com.booking.system.appointment.validation.CheckTimeSlots;
-import com.booking.system.appointment.validation.ValidAppointmentDTO;
+import com.booking.system.appointment.validation.ValidTimeSlotsDTO;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +15,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ValidAppointmentDTO(groups = { CheckTimeSlots.class })
+@ValidTimeSlotsDTO
 public class TimeSlotsRequestDTO {
 
     @NotNull
@@ -27,6 +26,4 @@ public class TimeSlotsRequestDTO {
 
     @NotNull
     private List<String> services;
-
-    private DetailsDTO details;
 }

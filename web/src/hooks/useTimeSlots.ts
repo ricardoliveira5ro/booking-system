@@ -14,8 +14,7 @@ export function useTimeSlots(appointmentFormData: AppointmentData) {
                 const payload = {
                     appointmentDate: appointmentFormData.date.toISOString().split('T')[0],
                     appointmentTime: appointmentFormData.time || (isToday(appointmentFormData.date) ? roundUpToNext30Min().time : "09:00"),
-                    services: appointmentFormData.services.map(s => s.code),
-                    details: appointmentFormData.details,
+                    services: appointmentFormData.services.map(s => s.code)
                 };
     
                 const res = await fetch("http://localhost:8081/api/appointment/time-slots", {
@@ -23,15 +22,19 @@ export function useTimeSlots(appointmentFormData: AppointmentData) {
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(payload),
                 });
-    
-                if (!res.ok)
-                    throw new Error(errors(`${res.status}`));
-    
-                return res.json();
+
+                const data = await res.json().catch(() => ({}));
+
+                if (!res.ok) 
+                    throw new Error(errors(data?.code || 'GENERAL'));
+
+                return data;
 
             } catch (err) {
-                console.log(err);
-                throw new Error(errors('general'))
+                if (err instanceof TypeError) // Network Error
+                    throw new Error(errors('apiNoService'));
+                
+                throw err;
             }
         },
         retry: 0

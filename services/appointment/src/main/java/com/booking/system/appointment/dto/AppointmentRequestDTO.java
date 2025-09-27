@@ -1,6 +1,5 @@
 package com.booking.system.appointment.dto;
 
-import com.booking.system.appointment.validation.CreateAppointment;
 import com.booking.system.appointment.validation.ValidAppointmentDTO;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -16,7 +15,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ValidAppointmentDTO(groups = { CreateAppointment.class })
+@ValidAppointmentDTO
 public class AppointmentRequestDTO {
 
     @NotNull
