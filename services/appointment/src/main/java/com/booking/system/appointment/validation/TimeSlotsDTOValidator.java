@@ -8,17 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Component
 public class TimeSlotsDTOValidator implements ConstraintValidator<ValidTimeSlotsDTO, TimeSlotsRequestDTO> {
 
     @Autowired
     private ServiceService serviceService;
-
-    // To be replaced by configs
-    private static final LocalTime START_WORKING_HOURS = LocalTime.of(9, 0);
-    private static final LocalTime END_WORKING_HOURS = LocalTime.of(19, 30);
 
     @Override
     public boolean isValid(TimeSlotsRequestDTO timeSlotsRequestDTO, ConstraintValidatorContext context) {
