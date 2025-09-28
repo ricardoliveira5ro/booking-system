@@ -7,7 +7,11 @@ import jakarta.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
@@ -20,7 +24,7 @@ public class BusinessHoursExceptionsEntity {
     @Id
     @EqualsAndHashCode.Include
     @Column(name = "EXCEPTION_DAY")
-    private Integer exceptionDay;
+    private LocalDate exceptionDay;
 
     @Column(name = "START_TIME")
     private LocalTime startTime;
@@ -30,4 +34,12 @@ public class BusinessHoursExceptionsEntity {
 
     @Column(name = "IS_CLOSED")
     private boolean isClosed;
+
+    @CreationTimestamp
+    @Column(name = "CREATED_AT", updatable = false)
+    private Instant createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "UPDATED_AT")
+    private Instant updatedAt;
 }

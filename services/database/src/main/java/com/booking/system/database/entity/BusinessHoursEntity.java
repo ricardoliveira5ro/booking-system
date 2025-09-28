@@ -11,7 +11,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
@@ -24,7 +23,7 @@ public class BusinessHoursEntity {
     @Id
     @EqualsAndHashCode.Include
     @Column(name = "WEEKDAY")
-    private LocalDate weekday;
+    private Integer weekday;
 
     @Column(name = "START_TIME")
     private LocalTime startTime;

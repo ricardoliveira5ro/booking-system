@@ -1,9 +1,6 @@
 package com.booking.system.appointment.service;
 
-import com.booking.system.appointment.dto.AppointmentDTO;
-import com.booking.system.appointment.dto.AppointmentRequestDTO;
-import com.booking.system.appointment.dto.ServiceDTO;
-import com.booking.system.appointment.dto.TimeSlotsRequestDTO;
+import com.booking.system.appointment.dto.*;
 import com.booking.system.appointment.repository.AppointmentRepository;
 import com.booking.system.database.entity.AppointmentEntity;
 import com.booking.system.database.entity.ServiceEntity;
@@ -28,11 +25,10 @@ public class AppointmentService {
     private ServiceService serviceService;
 
     @Autowired
-    private ModelMapper modelMapper;
+    private BusinessHoursService businessHoursService;
 
-    // To be replaced by configs
-    private static final LocalTime START_WORKING_HOURS = LocalTime.of(9, 0);
-    private static final LocalTime END_WORKING_HOURS = LocalTime.of(19, 30);
+    @Autowired
+    private ModelMapper modelMapper;
 
     public AppointmentDTO createAppointment(AppointmentRequestDTO appointmentRequest) {
         List<ServiceEntity> services = serviceService.getServicesByCode(appointmentRequest.getServices())
@@ -51,12 +47,19 @@ public class AppointmentService {
         int durationRequested = serviceService.getServicesByCode(timeSlotsRequestDTO.getServices())
                                                 .stream().mapToInt(ServiceDTO::getSlotTime).sum();
 
+        BusinessHoursDTO businessHours = businessHoursService.getExceptionByDay(date);
+        if (businessHours != null && businessHours.isClosed())
+            return List.of();
+        
+        if (businessHours == null)
+            businessHours = businessHoursService.getBusinessHoursByDay(date);
+
         List<LocalTime> availableTimeSlots = new ArrayList<>();
-        for (LocalTime timeSlot : generateSlots()) {
+        for (LocalTime timeSlot : generateSlots(businessHours.getStartTime(), businessHours.getEndTime())) {
             if (date.isEqual(LocalDate.now()) && timeSlot.isBefore(LocalTime.now()))
                 continue;
 
-            if (timeSlot.plusMinutes(durationRequested).isAfter(END_WORKING_HOURS))
+            if (timeSlot.plusMinutes(durationRequested).isAfter(businessHours.getEndTime()))
                 break;
 
             if (!doesOverlapTimeSlot(timeSlot, timeSlot.plusMinutes(durationRequested), date))
@@ -66,11 +69,11 @@ public class AppointmentService {
         return availableTimeSlots;
     }
 
-    private List<LocalTime> generateSlots() {
+    private List<LocalTime> generateSlots(LocalTime startTime, LocalTime endTime) {
         List<LocalTime> slots = new ArrayList<>();
-        LocalTime time = START_WORKING_HOURS;
+        LocalTime time = startTime;
 
-        while (!time.isAfter(END_WORKING_HOURS.minusMinutes(30))) {
+        while (!time.isAfter(endTime.minusMinutes(30))) {
             slots.add(time);
             time = time.plusMinutes(30);
         }
