@@ -12,7 +12,6 @@ import Details from "../../components/appointment/Details";
 
 import { useAppointmentSteps } from "@/hooks/useAppointmentSteps";
 
-import { roundUpToNext30Min } from "@/utils/functions";
 import { AppointmentData } from "@/models/Appointment";
 import AppointmentReview from "@/components/appointment/AppointmentReview";
 
@@ -21,10 +20,9 @@ export default function Appointment() {
     const t = useTranslations('appointment');
     const { step, back, next } = useAppointmentSteps();
 
-    const { date } = roundUpToNext30Min();
     const [appointmentFormData, setAppointmentFormData] = useState<AppointmentData>({
         services: [],
-        date: date,
+        date: new Date(),
         time: null,
         details: {
             name: "",
