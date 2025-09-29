@@ -47,12 +47,9 @@ public class AppointmentService {
         int durationRequested = serviceService.getServicesByCode(timeSlotsRequestDTO.getServices())
                                                 .stream().mapToInt(ServiceDTO::getSlotTime).sum();
 
-        BusinessHoursDTO businessHours = businessHoursService.getExceptionByDay(date);
-        if (businessHours != null && businessHours.isClosed())
+        BusinessHoursDTO businessHours = businessHoursService.getBusinessHoursByDay(date);
+        if (businessHours.isClosed())
             return List.of();
-        
-        if (businessHours == null)
-            businessHours = businessHoursService.getBusinessHoursByDay(date);
 
         List<LocalTime> availableTimeSlots = new ArrayList<>();
         for (LocalTime timeSlot : generateSlots(businessHours.getStartTime(), businessHours.getEndTime())) {

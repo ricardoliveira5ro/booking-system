@@ -29,9 +29,7 @@ public class AppointmentDTOValidator implements ConstraintValidator<ValidAppoint
 
     @Override
     public boolean isValid(AppointmentRequestDTO appointmentRequestDTO, ConstraintValidatorContext context) {
-        BusinessHoursDTO businessHours = businessHoursService.getExceptionByDay(appointmentRequestDTO.getAppointmentDate());
-        if (businessHours == null)
-            businessHours = businessHoursService.getBusinessHoursByDay(appointmentRequestDTO.getAppointmentDate());
+        BusinessHoursDTO businessHours = businessHoursService.getBusinessHoursByDay(appointmentRequestDTO.getAppointmentDate());
 
         if (businessHours.isClosed() || appointmentRequestDTO.getAppointmentDate().isBefore(LocalDate.now())) {
             context.disableDefaultConstraintViolation();
