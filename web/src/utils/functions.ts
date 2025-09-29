@@ -6,6 +6,7 @@ export function isToday(currentDate: Date): boolean {
             currentDate.getDate() === today.getDate();
 }
 
+/* UNUSED */
 export function roundUpToNext30Min(): { date: Date; time: string } {
     const now = new Date();
     const rounded = new Date(now);

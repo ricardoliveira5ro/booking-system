@@ -13,7 +13,6 @@ import APICallError from "../APICallError";
 import { useTimeSlots } from "@/hooks/useTimeSlots";
 import { useCalendar } from "@/hooks/useCalendar";
 
-import { isToday, roundUpToNext30Min } from "@/utils/functions";
 import { AppointmentData } from "@/models/Appointment";
 
 import '../../app/appointment/appointment.css'
@@ -33,15 +32,7 @@ export default function DateTime({ appointmentFormData, setAppointmentFormData }
     }, [appointmentFormData.date]);
 
     function handleDayClick(clickedDate: Date) {
-        let finalDate: Date;
-        
-        if (isToday(clickedDate)) {
-            const rounded = roundUpToNext30Min();
-            finalDate = new Date(rounded.date.getFullYear(), rounded.date.getMonth(), rounded.date.getDate(), Number(rounded.time.split(':')[0]), 0, 0);
-        } else {
-            finalDate = new Date(clickedDate.getFullYear(), clickedDate.getMonth(), clickedDate.getDate(), 9, 0, 0);
-        }
-        
+        const finalDate = new Date(clickedDate.getFullYear(), clickedDate.getMonth(), clickedDate.getDate(), 9, 0, 0); // Time is irrelevant but fixes timezone issue (day before)
         setAppointmentFormData(prev => ({ ...prev, date: finalDate, time: null }));
     }
 
