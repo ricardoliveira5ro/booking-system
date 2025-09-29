@@ -23,18 +23,13 @@ public class BusinessHoursService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public BusinessHoursDTO getExceptionByDay(LocalDate day) {
+    public BusinessHoursDTO getBusinessHoursByDay(LocalDate day) {
         BusinessHoursExceptionsEntity exception = businessHoursExceptionsRepository.findById(day).orElse(null);
 
         if (exception != null)
             return modelMapper.map(exception, BusinessHoursDTO.class);
 
-        return null;
-    }
-
-    public BusinessHoursDTO getBusinessHoursByDay(LocalDate day) {
         int weekdayValue = day.getDayOfWeek().getValue();
-
         BusinessHoursEntity businessHours = businessHoursRepository.findById(weekdayValue).orElse(null);
 
         return modelMapper.map(businessHours, BusinessHoursDTO.class);
