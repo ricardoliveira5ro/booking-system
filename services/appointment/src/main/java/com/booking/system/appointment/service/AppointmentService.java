@@ -2,8 +2,10 @@ package com.booking.system.appointment.service;
 
 import com.booking.system.appointment.dto.*;
 import com.booking.system.appointment.repository.AppointmentRepository;
+import com.booking.system.common.exception.AlreadyBookingException;
 import com.booking.system.database.entity.AppointmentEntity;
 import com.booking.system.database.entity.ServiceEntity;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class AppointmentService {
@@ -30,15 +33,31 @@ public class AppointmentService {
     @Autowired
     private ModelMapper modelMapper;
 
+    private final ConcurrentHashMap<LocalDate, Object> locks = new ConcurrentHashMap<>();
+
+    @Transactional
     public AppointmentDTO createAppointment(AppointmentRequestDTO appointmentRequest) {
-        List<ServiceEntity> services = serviceService.getServicesByCode(appointmentRequest.getServices())
-                .stream().map(s -> this.modelMapper.map(s, ServiceEntity.class))
-                .toList();
+        LocalDate appointmentDate = appointmentRequest.getAppointmentDate();
+        Object lock = locks.computeIfAbsent(appointmentDate, d -> new Object());
 
-        AppointmentEntity appointment = modelMapper.map(appointmentRequest, AppointmentEntity.class);
-        appointment.setServices(new HashSet<>(services));
+        synchronized (lock) {
+            List<ServiceEntity> services = serviceService.getServicesByCode(appointmentRequest.getServices())
+                    .stream().map(s -> this.modelMapper.map(s, ServiceEntity.class))
+                    .toList();
 
-        return modelMapper.map(appointmentRepository.save(appointment), AppointmentDTO.class);
+            int duration = services.stream().mapToInt(ServiceEntity::getSlotTime).sum();
+
+            LocalTime start = appointmentRequest.getAppointmentTime();
+            LocalTime end = appointmentRequest.getAppointmentTime().plusMinutes(duration);
+
+            if (doesOverlapTimeSlot(start, end, appointmentDate))
+                throw new AlreadyBookingException("");
+
+            AppointmentEntity appointment = modelMapper.map(appointmentRequest, AppointmentEntity.class);
+            appointment.setServices(new HashSet<>(services));
+
+            return modelMapper.map(appointmentRepository.save(appointment), AppointmentDTO.class);
+        }
     }
 
     public List<LocalTime> getAvailableTimeSlots(TimeSlotsRequestDTO timeSlotsRequestDTO) {

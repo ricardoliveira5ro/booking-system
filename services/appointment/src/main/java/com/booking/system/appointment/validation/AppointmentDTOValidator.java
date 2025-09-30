@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 
 @Component
 public class AppointmentDTOValidator implements ConstraintValidator<ValidAppointmentDTO, AppointmentRequestDTO> {
@@ -53,15 +52,6 @@ public class AppointmentDTOValidator implements ConstraintValidator<ValidAppoint
             return false;
         }
 
-        if (doesOverlapTimeSlot(appointmentRequestDTO)) {
-            context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("APPOINTMENT_ALREADY_BOOKED")
-                    .addPropertyNode("appointmentDate")
-                    .addConstraintViolation();
-
-            return false;
-        }
-
         if (appointmentRequestDTO.getServices().isEmpty() ||
             serviceService.getServicesByCode(appointmentRequestDTO.getServices()).size() != appointmentRequestDTO.getServices().size()
         ) {
@@ -94,16 +84,5 @@ public class AppointmentDTOValidator implements ConstraintValidator<ValidAppoint
         LocalTime endTime = appointmentRequestDTO.getAppointmentTime().plusMinutes(duration);
 
         return endTime.isAfter(endWorkingHours);
-    }
-
-    private boolean doesOverlapTimeSlot(AppointmentRequestDTO appointmentRequestDTO) {
-        int duration = serviceService.getServicesByCode(appointmentRequestDTO.getServices())
-                .stream().mapToInt(ServiceDTO::getSlotTime).sum();
-
-        LocalDate date = appointmentRequestDTO.getAppointmentDate();
-        LocalTime requestedStartTime = appointmentRequestDTO.getAppointmentTime();
-        LocalTime requestedEndTime = appointmentRequestDTO.getAppointmentTime().plusMinutes(duration);
-
-        return appointmentService.doesOverlapTimeSlot(requestedStartTime, requestedEndTime, date);
     }
 }

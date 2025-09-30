@@ -18,6 +18,21 @@ public class GlobalExceptionHandler {
     @Value("${spring.profiles.active}")
     private String activeProfile;
 
+    @ExceptionHandler(AlreadyBookingException.class)
+    public ResponseEntity<ErrorResponse> handleAlreadyBookingException(AlreadyBookingException ex) {
+        String details = null;
+        List<String> stackTrace = null;
+        if ("dev".equalsIgnoreCase(activeProfile)) {
+            details = ex.getMessage();
+            stackTrace = Arrays.stream(ex.getStackTrace())
+                    .map(StackTraceElement::toString)
+                    .toList();
+        }
+
+        return new ResponseEntity<>(new ErrorResponse("APPOINTMENT_ALREADY_BOOKED", "Appointment creation failed", details, stackTrace, LocalDateTime.now()),
+                HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex) {
         String code = ex.getBindingResult().getFieldErrors()
