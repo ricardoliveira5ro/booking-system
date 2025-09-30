@@ -18,16 +18,12 @@ public class GlobalExceptionHandler {
     @Value("${spring.profiles.active}")
     private String activeProfile;
 
+    private String details = null;
+    private List<String> stackTrace = null;
+
     @ExceptionHandler(AlreadyBookingException.class)
     public ResponseEntity<ErrorResponse> handleAlreadyBookingException(AlreadyBookingException ex) {
-        String details = null;
-        List<String> stackTrace = null;
-        if ("dev".equalsIgnoreCase(activeProfile)) {
-            details = ex.getMessage();
-            stackTrace = Arrays.stream(ex.getStackTrace())
-                    .map(StackTraceElement::toString)
-                    .toList();
-        }
+        setDetailsAndStackTrace(ex);
 
         return new ResponseEntity<>(new ErrorResponse("APPOINTMENT_ALREADY_BOOKED", "Appointment creation failed", details, stackTrace, LocalDateTime.now()),
                 HttpStatus.BAD_REQUEST);
@@ -39,14 +35,7 @@ public class GlobalExceptionHandler {
                             .stream().map(DefaultMessageSourceResolvable::getDefaultMessage)
                             .toList().getFirst();
 
-        String details = null;
-        List<String> stackTrace = null;
-        if ("dev".equalsIgnoreCase(activeProfile)) {
-            details = ex.getMessage();
-            stackTrace = Arrays.stream(ex.getStackTrace())
-                    .map(StackTraceElement::toString)
-                    .toList();
-        }
+        setDetailsAndStackTrace(ex);
 
         return new ResponseEntity<>(new ErrorResponse(code, "Validation failed", details, stackTrace, LocalDateTime.now()),
                                             HttpStatus.BAD_REQUEST);
@@ -54,17 +43,18 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex) {
-        String details = null;
-        List<String> stackTrace = null;
+        setDetailsAndStackTrace(ex);
 
+        return new ResponseEntity<>(new ErrorResponse("GENERAL", "An unexpected error occurred", details, stackTrace, LocalDateTime.now()),
+                                            HttpStatus.BAD_REQUEST);
+    }
+
+    private void setDetailsAndStackTrace(Exception ex) {
         if ("dev".equalsIgnoreCase(activeProfile)) {
             details = ex.getMessage();
             stackTrace = Arrays.stream(ex.getStackTrace())
                     .map(StackTraceElement::toString)
                     .toList();
         }
-
-        return new ResponseEntity<>(new ErrorResponse("GENERAL", "An unexpected error occurred", details, stackTrace, LocalDateTime.now()),
-                                            HttpStatus.BAD_REQUEST);
     }
 }

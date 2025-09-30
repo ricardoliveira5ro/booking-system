@@ -51,7 +51,7 @@ public class AppointmentService {
             LocalTime end = appointmentRequest.getAppointmentTime().plusMinutes(duration);
 
             if (doesOverlapTimeSlot(start, end, appointmentDate))
-                throw new AlreadyBookingException("");
+                throw new AlreadyBookingException("Appointment already booked");
 
             AppointmentEntity appointment = modelMapper.map(appointmentRequest, AppointmentEntity.class);
             appointment.setServices(new HashSet<>(services));
