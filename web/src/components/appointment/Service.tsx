@@ -22,7 +22,7 @@ export default function Service({ appointmentFormData, setAppointmentFormData }:
         queryKey: ['services'],
         queryFn: async () => {
             try {
-                const res = await fetch('http://localhost:8081/api/appointment/services')
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/appointment/services`)
                 const data = await res.json();
     
                 if (!res.ok)
@@ -54,7 +54,7 @@ export default function Service({ appointmentFormData, setAppointmentFormData }:
                 transition: Slide,
             });
         }
-    }, [isError])
+    }, [isError, error?.message])
 
     const toggleService = (service: { code: string; name: string; price: number; slotTime: string }, checked: boolean) => {
         setAppointmentFormData((prev) => ({
@@ -69,7 +69,7 @@ export default function Service({ appointmentFormData, setAppointmentFormData }:
                 <ServiceSkeleton /> : 
                 isError ?
                     <APICallError retry={refetch} /> :
-                    data.map((service: any, index: number) => (
+                    data.map((service: { code: string; name: string; price: number; slotTime: string }, index: number) => (
                         <div key={service.code} data-aos="fade-right" data-aos-duration="900" data-aos-delay={`${index * 100}`}>
                             <div className="flex pb-4 gap-x-4">
                                 <div className="flex flex-col w-full gap-y-0.5">

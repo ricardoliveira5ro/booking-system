@@ -35,16 +35,15 @@ export default function Appointment() {
     const isNextButtonDisabled = useMemo(() => {
         if (step === 1) return appointmentFormData.services.length === 0;
         else if (step === 2) return appointmentFormData.services.length === 0 || !appointmentFormData.date || !appointmentFormData.time;
-        else if (step === 3) return appointmentFormData.services.length === 0 || !appointmentFormData.date || !appointmentFormData.time || isDetailsEmpty();
+        else if (step === 3) {
+            const detailsEmpty = 
+                appointmentFormData.details.name === "" ||
+                (appointmentFormData.details.email === "" && appointmentFormData.details.phoneNumber === "");
+            return appointmentFormData.services.length === 0 || !appointmentFormData.date || !appointmentFormData.time || detailsEmpty;
+        }
+        return false;
 
     }, [appointmentFormData, step])
-
-    
-    function isDetailsEmpty(): boolean {
-        return appointmentFormData.details.name === "" ||
-                (appointmentFormData.details.email === "" && appointmentFormData.details.phoneNumber === "")
-    }
-
     return (
         <div>
             <div className="grid grid-rows-[auto_1fr_auto] justify-items-center h-screen px-8 py-16 gap-y-12">

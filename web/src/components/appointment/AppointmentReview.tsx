@@ -35,7 +35,7 @@ export default function AppointmentReview({ appointmentFormData, navigateBack }:
                     transition: Slide,
                 });
             },
-            onError: (err: any) => {
+            onError: (err) => {
                 toast.error(err.message, {
                     position: "top-center",
                     autoClose: 5000,

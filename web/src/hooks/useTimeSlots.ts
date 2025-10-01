@@ -15,7 +15,7 @@ export function useTimeSlots(appointmentFormData: AppointmentData) {
                     services: appointmentFormData.services.map(s => s.code)
                 };
     
-                const res = await fetch("http://localhost:8081/api/appointment/time-slots", {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/appointment/time-slots`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(payload),

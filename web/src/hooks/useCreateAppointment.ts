@@ -17,7 +17,7 @@ export function useCreateAppointment(appointmentFormData: AppointmentData) {
                     details: appointmentFormData.details,
                 };
 
-                const res = await fetch("http://localhost:8081/api/appointment", {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/appointment`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(payload),

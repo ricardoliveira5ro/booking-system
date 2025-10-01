@@ -29,7 +29,7 @@ export default function DateTime({ appointmentFormData, setAppointmentFormData }
 
     useEffect(() => {
         mutate();
-    }, [appointmentFormData.date]);
+    }, [appointmentFormData.date, mutate]);
 
     function handleDayClick(clickedDate: Date) {
         const finalDate = new Date(clickedDate.getFullYear(), clickedDate.getMonth(), clickedDate.getDate(), 9, 0, 0); // Time is irrelevant but fixes timezone issue (day before)
@@ -61,7 +61,7 @@ export default function DateTime({ appointmentFormData, setAppointmentFormData }
                 transition: Slide,
             });
         }
-    }, [isError])
+    }, [isError, error])
     
     return (
         <main className="flex flex-col w-full h-full min-h-0 min-w-0 pt-4 px-2 gap-y-6">
@@ -85,7 +85,7 @@ export default function DateTime({ appointmentFormData, setAppointmentFormData }
                                 <SearchX color='#FE5F55' />
                                 <span>{t('noTimeSlotsAvailable')}</span>
                             </div> :
-                            data.map((timeSlot: any, index: number) => (
+                            data.map((timeSlot: string, index: number) => (
                                 <div key={index} className="flex flex-col gap-y-3 cursor-pointer" onClick={() => setAppointmentFormData((prev) => ({ ...prev, time: timeSlot }))}>
                                     <div className="flex justify-between items-center">
                                         <span className="font-bold">{timeSlot}</span>
