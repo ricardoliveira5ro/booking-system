@@ -1,7 +1,5 @@
 spring:
-  application:
-    name: search
   config:
     import: optional:classpath:application-database.yml
-#server:
-#  port: 8081
+server:
+  port: 8080
