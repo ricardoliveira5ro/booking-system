@@ -5,7 +5,7 @@ FROM eclipse-temurin:21-jdk-alpine
 WORKDIR /app
 
 # 3. Copy the packaged Spring Boot JAR into the container
-COPY target/backend-1.0-SNAPSHOT.jar app.jar
+COPY target/runner-1.0-SNAPSHOT.jar app.jar
 
 # 4. Expose port 8080 so external services can connect
 EXPOSE 8080

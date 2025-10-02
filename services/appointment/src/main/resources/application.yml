@@ -1,7 +1,7 @@
 spring:
   application:
-    name: search
+    name: appointment
   config:
     import: optional:classpath:application-database.yml
-#server:
-#  port: 8081
+server:
+  port: 8081
