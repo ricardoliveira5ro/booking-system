@@ -4,19 +4,18 @@ FROM maven:3.9.4-eclipse-temurin-17 AS build
 # Set working directory inside the container
 WORKDIR /app
 
-# Copy pom.xml and source code
-COPY pom.xml .
-COPY src ./src
+# Copy the whole services folder
+COPY . .
 
-# Build the JAR
-RUN mvn clean package -DskipTests
+# Build the runner module and all dependencies
+RUN mvn clean package -pl runner -am -DskipTests
 
 # Use an official lightweight JDK runtime as the base image
 FROM eclipse-temurin:21-jdk-alpine
 WORKDIR /app
 
 # Copy the packaged Spring Boot JAR into the container
-COPY --from=build /app/target/runner-1.0-SNAPSHOT.jar app.jar
+COPY --from=build /app/runner/target/runner-1.0-SNAPSHOT.jar app.jar
 
 # Expose port 8080 so external services can connect
 EXPOSE 8080
