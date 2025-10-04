@@ -1,14 +1,25 @@
-# 1. Use an official lightweight JDK runtime as the base image
-FROM eclipse-temurin:21-jdk-alpine
+# Build the JAR
+FROM maven:3.9.4-eclipse-temurin-17 AS build
 
-# 2. Set working directory inside the container
+# Set working directory inside the container
 WORKDIR /app
 
-# 3. Copy the packaged Spring Boot JAR into the container
-COPY target/runner-1.0-SNAPSHOT.jar app.jar
+# Copy pom.xml and source code
+COPY pom.xml .
+COPY src ./src
 
-# 4. Expose port 8080 so external services can connect
+# Build the JAR
+RUN mvn clean package -DskipTests
+
+# Use an official lightweight JDK runtime as the base image
+FROM eclipse-temurin:21-jdk-alpine
+WORKDIR /app
+
+# Copy the packaged Spring Boot JAR into the container
+COPY --from=build /app/target/runner-1.0-SNAPSHOT.jar app.jar
+
+# Expose port 8080 so external services can connect
 EXPOSE 8080
 
-# 5. Run the jar when the container starts
+# Run the jar when the container starts
 ENTRYPOINT ["java","-jar","app.jar"]
