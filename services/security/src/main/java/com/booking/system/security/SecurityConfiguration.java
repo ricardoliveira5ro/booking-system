@@ -1,5 +1,6 @@
 package com.booking.system.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,6 +15,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class SecurityConfiguration {
 
+    @Value("${spring.profiles.active}")
+    private String activeProfile;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
@@ -25,8 +29,9 @@ public class SecurityConfiguration {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // Local development only / Production frontend & backend will sit in same domain
-        configuration.addAllowedOrigin("http://localhost:3000");
+        String allowedOrigin = "dev".equalsIgnoreCase(activeProfile) ?
+                                    "http://localhost:3000" : "https://booking-system-blond-psi.vercel.app";
+        configuration.addAllowedOrigin(allowedOrigin);
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);
