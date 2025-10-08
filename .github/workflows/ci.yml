@@ -38,7 +38,7 @@ jobs:
           java-version: '21'
 
       - name: Build backend
-        working-directory: services
+        working-directory: ./services
         run: mvn clean verify -DskipTests=false
 
       ############# WEB #############
