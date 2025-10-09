@@ -86,13 +86,13 @@ export default function DateTime({ appointmentFormData, setAppointmentFormData }
                                 <span>{t('noTimeSlotsAvailable')}</span>
                             </div> :
                             data.map((timeSlot: string, index: number) => (
-                                <div key={index} className="flex flex-col gap-y-3 cursor-pointer" onClick={() => setAppointmentFormData((prev) => ({ ...prev, time: timeSlot }))}>
+                                <button key={index} className="flex flex-col gap-y-3 cursor-pointer" onClick={() => setAppointmentFormData((prev) => ({ ...prev, time: timeSlot }))}>
                                     <div className="flex justify-between items-center">
                                         <span className="font-bold">{timeSlot}</span>
                                         <input type="radio" name="time" className="accent-[var(--orange)] pointer-events-none" checked={appointmentFormData.time === timeSlot} readOnly />
                                     </div>
                                     <hr />
-                                </div>
+                                </button>
                             ))
                 }
             </div>

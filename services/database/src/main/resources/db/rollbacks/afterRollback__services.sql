@@ -1,0 +1,5 @@
+DO $$
+BEGIN
+    DELETE FROM T_SERVICE
+    WHERE CODE IN ('HC', 'BT', 'HT');
+END $$;
