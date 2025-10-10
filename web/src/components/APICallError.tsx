@@ -1,10 +1,11 @@
 import { TriangleAlert } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-export default function APICallError({ retry }: { 
-    retry: () => void
- }) {
+interface APICallErrorProps {
+    readonly retry: () => void;
+}
 
+export default function APICallError({ retry }: APICallErrorProps) {
     const errors = useTranslations('errors');
     
     return (

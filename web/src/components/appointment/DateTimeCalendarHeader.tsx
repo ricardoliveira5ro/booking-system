@@ -1,10 +1,12 @@
 import { Calendar, MoveLeft, MoveRight } from "lucide-react";
 
-export function DateTimeCalendarHeader({ monthLabel, onPrev, onNext }: {
+interface DateTimeCalendarHeaderProps {
     monthLabel: string;
-    onPrev: () => void;
-    onNext: () => void;
-}) {
+    readonly onPrev: () => void;
+    readonly onNext: () => void;
+}
+
+export function DateTimeCalendarHeader({ monthLabel, onPrev, onNext }: DateTimeCalendarHeaderProps) {
     return (
         <div className="flex items-center justify-between gap-x-4">
             <div className="flex gap-x-2 items-center justify-center">

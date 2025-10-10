@@ -10,10 +10,12 @@ import APICallError from '../APICallError';
 
 import { AppointmentData } from '@/models/Appointment';
 
-export default function Service({ appointmentFormData, setAppointmentFormData }: {
-    appointmentFormData: AppointmentData;
-    setAppointmentFormData: React.Dispatch<React.SetStateAction<AppointmentData>>;
-}) {
+interface ServiceProps {
+    readonly appointmentFormData: AppointmentData;
+    readonly setAppointmentFormData: React.Dispatch<React.SetStateAction<AppointmentData>>;
+}
+
+export default function Service({ appointmentFormData, setAppointmentFormData }: ServiceProps) {
 
     const t = useTranslations('appointment');
     const errors = useTranslations('errors');
