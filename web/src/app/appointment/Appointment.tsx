@@ -44,6 +44,20 @@ export default function Appointment() {
         return false;
 
     }, [appointmentFormData, step])
+
+    const renderStepContent = () => {
+        switch (step) {
+            case 1:
+            return <Service appointmentFormData={appointmentFormData} setAppointmentFormData={setAppointmentFormData} />;
+            case 2:
+            return <DateTime appointmentFormData={appointmentFormData} setAppointmentFormData={setAppointmentFormData} />;
+            case 3:
+            return <Details appointmentFormData={appointmentFormData} setAppointmentFormData={setAppointmentFormData} />;
+            default:
+            return <AppointmentReview appointmentFormData={appointmentFormData} navigateBack={back} />;
+        }
+    };
+
     return (
         <div>
             <div className="grid grid-rows-[auto_1fr_auto] justify-items-center h-screen px-8 py-16 gap-y-12">
@@ -52,11 +66,7 @@ export default function Appointment() {
                     <h1 className="flex-1 text-center font-sans text-2xl">{t(`step${step}`)}</h1>
                     <Link href={'/'}><X className="cursor-pointer" size={32} /></Link>
                 </header>
-                {step === 1 ? <Service appointmentFormData={appointmentFormData} setAppointmentFormData={setAppointmentFormData} /> :
-                step === 2 ? <DateTime appointmentFormData={appointmentFormData} setAppointmentFormData={setAppointmentFormData} /> :
-                step === 3 ? <Details appointmentFormData={appointmentFormData} setAppointmentFormData={setAppointmentFormData} /> :
-                                <AppointmentReview appointmentFormData={appointmentFormData} navigateBack={back} />
-                }
+                {renderStepContent()}
                 {step < 4 &&
                     <footer className="flex items-center justify-between w-full px-2">
                         <button onClick={back} className="cursor-pointer font-sans border rounded-lg px-4 py-1">{t('backButton')}</button>

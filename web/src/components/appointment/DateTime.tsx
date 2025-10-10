@@ -27,6 +27,9 @@ export default function DateTime({ appointmentFormData, setAppointmentFormData }
     const { displayedMonth, daysLeft, goPrev, goNext } = useCalendar(appointmentFormData.date);
     const { mutate, data = [], isPending, isError, error } = useTimeSlots(appointmentFormData);
 
+    const monthKey = `months.${displayedMonth.getMonth()}`;
+    const monthLabel = t(monthKey);
+
     useEffect(() => {
         mutate();
     }, [appointmentFormData.date, mutate]);
@@ -62,11 +65,40 @@ export default function DateTime({ appointmentFormData, setAppointmentFormData }
             });
         }
     }, [isError, error])
+
+    const renderContent = () => {
+        if (isPending) {
+            return <DateTimeSlotSkeleton />;
+        }
+
+        if (isError) {
+            return <APICallError retry={mutate} />;
+        }
+
+        if (data.length === 0) {
+            return (
+                <div className='flex w-full items-center gap-x-2'>
+                    <SearchX color='#FE5F55' />
+                    <span>{t('noTimeSlotsAvailable')}</span>
+                </div>
+            );
+        }
+
+        return data.map((timeSlot: string) => (
+            <button key={timeSlot} className="flex flex-col gap-y-3 cursor-pointer" onClick={() => setAppointmentFormData((prev) => ({ ...prev, time: timeSlot }))}>
+                <div className="flex justify-between items-center">
+                    <span className="font-bold">{timeSlot}</span>
+                    <input type="radio" name="time" className="accent-[var(--orange)] pointer-events-none" checked={appointmentFormData.time === timeSlot} readOnly />
+                </div>
+                <hr />
+            </button>
+        ));
+    };
     
     return (
         <main className="flex flex-col w-full h-full min-h-0 min-w-0 pt-4 px-2 gap-y-6">
             <DateTimeCalendarHeader 
-                monthLabel={`${t(`months.${displayedMonth.getMonth()}`)} ${displayedMonth.getFullYear()}`}
+                monthLabel={`${monthLabel} ${displayedMonth.getFullYear()}`}
                 onPrev={goPrev}
                 onNext={goNext}
             />
@@ -76,25 +108,7 @@ export default function DateTime({ appointmentFormData, setAppointmentFormData }
                 isSelected={isSelectedDay} 
             />
             <div className="flex flex-1 flex-col pt-6 gap-y-6 overflow-y-auto scrollbar-hide">
-                {isPending ?
-                    <DateTimeSlotSkeleton /> :
-                    isError ?
-                        <APICallError retry={mutate} /> :
-                        data.length === 0 ?
-                            <div className='flex w-full items-center gap-x-2'>
-                                <SearchX color='#FE5F55' />
-                                <span>{t('noTimeSlotsAvailable')}</span>
-                            </div> :
-                            data.map((timeSlot: string, index: number) => (
-                                <button key={index} className="flex flex-col gap-y-3 cursor-pointer" onClick={() => setAppointmentFormData((prev) => ({ ...prev, time: timeSlot }))}>
-                                    <div className="flex justify-between items-center">
-                                        <span className="font-bold">{timeSlot}</span>
-                                        <input type="radio" name="time" className="accent-[var(--orange)] pointer-events-none" checked={appointmentFormData.time === timeSlot} readOnly />
-                                    </div>
-                                    <hr />
-                                </button>
-                            ))
-                }
+                {renderContent()}
             </div>
         </main>
     );

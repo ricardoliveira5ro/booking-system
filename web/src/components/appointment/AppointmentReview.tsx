@@ -13,6 +13,12 @@ export default function AppointmentReview({ appointmentFormData, navigateBack }:
     const t = useTranslations('appointment');
     const router = useRouter();  
 
+    const dayKey = `days.${appointmentFormData.date.getDay()}`;
+    const dayLabel = t(dayKey);
+    const monthKey = `months.${appointmentFormData.date.getMonth()}`;
+    const monthLabel = t(monthKey);
+    const formattedDate = `${appointmentFormData.date.getDate()} ${monthLabel}, ${dayLabel}, ${appointmentFormData.time}`;
+
     const { mutate } = useCreateAppointment(appointmentFormData);
     const handleCreateAppointment = () => {
         mutate(undefined, {
@@ -75,7 +81,7 @@ export default function AppointmentReview({ appointmentFormData, navigateBack }:
                 <div data-aos="fade-right" data-aos-duration="900" data-aos-delay="600" className="flex flex-col px-1 gap-y-3">
                     <div className="flex flex-col gap-y-1">
                         <span className="text-sm">{`${t('when')}?`}</span>
-                        <span>{`${appointmentFormData.date.getDate()} ${t(`months.${appointmentFormData.date.getMonth()}`)}, ${t(`days.${appointmentFormData.date.getDay()}`)}, ${appointmentFormData.time}`}</span>
+                        <span>{formattedDate}</span>
                     </div>
                     <hr data-aos="fade-right" data-aos-duration="900" data-aos-delay="650" className="text-gray-500" />
                 </div>
