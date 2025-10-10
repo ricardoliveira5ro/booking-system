@@ -66,6 +66,13 @@ export default function DateTime({ appointmentFormData, setAppointmentFormData }
         }
     }, [isError, error])
 
+    const handleTimeSlotClick = (timeSlot: string) => {
+        setAppointmentFormData((prev) => ({
+            ...prev,
+            time: timeSlot,
+        }));
+    };
+
     const renderContent = () => {
         if (isPending) {
             return <DateTimeSlotSkeleton />;
@@ -85,7 +92,7 @@ export default function DateTime({ appointmentFormData, setAppointmentFormData }
         }
 
         return data.map((timeSlot: string) => (
-            <button key={timeSlot} className="flex flex-col gap-y-3 cursor-pointer" onClick={() => setAppointmentFormData((prev) => ({ ...prev, time: timeSlot }))}>
+            <button key={timeSlot} className="flex flex-col gap-y-3 cursor-pointer" onClick={() => handleTimeSlotClick(timeSlot)}>
                 <div className="flex justify-between items-center">
                     <span className="font-bold">{timeSlot}</span>
                     <input type="radio" name="time" className="accent-[var(--orange)] pointer-events-none" checked={appointmentFormData.time === timeSlot} readOnly />
