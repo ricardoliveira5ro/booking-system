@@ -72,13 +72,11 @@ public class AppointmentService {
 
         List<LocalTime> availableTimeSlots = new ArrayList<>();
         for (LocalTime timeSlot : generateSlots(businessHours.getStartTime(), businessHours.getEndTime())) {
-            if (date.isEqual(LocalDate.now()) && timeSlot.isBefore(LocalTime.now()))
-                continue;
-
             if (timeSlot.plusMinutes(durationRequested).isAfter(businessHours.getEndTime()))
                 break;
 
-            if (!doesOverlapTimeSlot(timeSlot, timeSlot.plusMinutes(durationRequested), date))
+            boolean isPastSlot = date.isEqual(LocalDate.now()) && timeSlot.isBefore(LocalTime.now());
+            if (!isPastSlot && !doesOverlapTimeSlot(timeSlot, timeSlot.plusMinutes(durationRequested), date))
                 availableTimeSlots.add(timeSlot);
         }
 
