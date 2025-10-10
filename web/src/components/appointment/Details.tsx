@@ -1,12 +1,14 @@
 import { useTranslations } from 'next-intl';
 import { AppointmentData } from '@/models/Appointment';
 
-import '../../app/appointment/appointment.css'
+import '../../app/appointment/appointment.css';
 
-export default function Details({ appointmentFormData, setAppointmentFormData }: {
-    appointmentFormData: AppointmentData;
-    setAppointmentFormData: React.Dispatch<React.SetStateAction<AppointmentData>>;
-}) {
+interface DetailsProps {
+    readonly appointmentFormData: AppointmentData;
+    readonly setAppointmentFormData: React.Dispatch<React.SetStateAction<AppointmentData>>;
+}
+
+export default function Details({ appointmentFormData, setAppointmentFormData }: DetailsProps) {
 
     const t = useTranslations('appointment');
 

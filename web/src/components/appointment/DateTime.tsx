@@ -17,10 +17,12 @@ import { AppointmentData } from "@/models/Appointment";
 
 import '../../app/appointment/appointment.css'
 
-export default function DateTime({ appointmentFormData, setAppointmentFormData }: {
-    appointmentFormData: AppointmentData;
-    setAppointmentFormData: React.Dispatch<React.SetStateAction<AppointmentData>>;
-}) {
+interface DateTimeProps {
+    readonly appointmentFormData: AppointmentData;
+    readonly setAppointmentFormData: React.Dispatch<React.SetStateAction<AppointmentData>>;
+}
+
+export default function DateTime({ appointmentFormData, setAppointmentFormData }: DateTimeProps) {
 
     const t = useTranslations('appointment');
 

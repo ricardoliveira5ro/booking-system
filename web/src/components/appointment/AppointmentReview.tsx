@@ -5,10 +5,12 @@ import { Slide, toast } from "react-toastify";
 import { AppointmentData } from "@/models/Appointment";
 import { useCreateAppointment } from "@/hooks/useCreateAppointment";
 
-export default function AppointmentReview({ appointmentFormData, navigateBack }: {
-    appointmentFormData: AppointmentData;
-    navigateBack: () => void;
-}) {
+interface AppointmentReviewProps {
+    readonly appointmentFormData: AppointmentData;
+    readonly navigateBack: () => void;
+}
+
+export default function AppointmentReview({ appointmentFormData, navigateBack }: AppointmentReviewProps) {
 
     const t = useTranslations('appointment');
     const router = useRouter();  

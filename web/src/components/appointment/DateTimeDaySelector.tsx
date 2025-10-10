@@ -1,8 +1,10 @@
-export function DateTimeDaySelector({ days, onDayClick, isSelected }: {
-    days: { dayNumber: number; weekday: string; date: Date }[];
-    onDayClick: (day: Date) => void;
-    isSelected: (day: Date) => boolean;
-}) {
+interface DateTimeDaySelectorProps {
+    readonly days: { dayNumber: number; weekday: string; date: Date }[];
+    readonly onDayClick: (day: Date) => void;
+    readonly isSelected: (day: Date) => boolean;
+}
+
+export function DateTimeDaySelector({ days, onDayClick, isSelected }: DateTimeDaySelectorProps) {
     return (
         <div className="w-full overflow-x-auto scrollbar-hide">
             <div className="flex gap-x-4 flex-nowrap">
