@@ -1,7 +1,7 @@
 import { Calendar, MoveLeft, MoveRight } from "lucide-react";
 
 interface DateTimeCalendarHeaderProps {
-    monthLabel: string;
+    readonly monthLabel: string;
     readonly onPrev: () => void;
     readonly onNext: () => void;
 }
