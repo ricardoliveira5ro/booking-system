@@ -18,8 +18,8 @@ public class GlobalExceptionHandler {
     @Value("${spring.profiles.active}")
     private String activeProfile;
 
-    private String details = null;
-    private List<String> stackTrace = null;
+    protected String details = null;
+    protected List<String> stackTrace = null;
 
     @ExceptionHandler(AlreadyBookingException.class)
     public ResponseEntity<ErrorResponse> handleAlreadyBookingException(AlreadyBookingException ex) {
