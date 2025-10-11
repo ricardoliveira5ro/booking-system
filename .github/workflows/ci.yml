@@ -37,6 +37,11 @@ jobs:
 
       - name: Build backend
         working-directory: ./services
+        env:
+          SPRING_PROFILES_ACTIVE: ${{ secrets.SPRING_PROFILES_ACTIVE }}
+          DB_URL: ${{ secrets.DB_URL }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: mvn clean verify -DskipTests=false
 
       ############# WEB #############
