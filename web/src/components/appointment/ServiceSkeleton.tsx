@@ -1,8 +1,10 @@
+import { v4 } from 'uuid';
+
 export function ServiceSkeleton() {
     return (
         <>
-            {[...Array(3)].map((_v, _i) => (
-                <div key={`skeleton-${_i}`} className="animate-pulse">
+            {Array.from({ length: 3 }).map(() => (
+                <div key={v4()} className="animate-pulse">
                     <div className="flex pb-4 gap-x-4">
                         <div className="flex flex-col w-full gap-y-1">
                             <div className="h-5 w-32 bg-gray-300 rounded"></div>
