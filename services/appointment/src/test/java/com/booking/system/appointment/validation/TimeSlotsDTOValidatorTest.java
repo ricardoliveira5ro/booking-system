@@ -43,7 +43,7 @@ class TimeSlotsDTOValidatorTest {
     void setUp() {
         dto = new TimeSlotsRequestDTO();
         dto.setAppointmentDate(LocalDate.now().plusDays(1));
-        dto.setServices(List.of("CODE1", "CODE2"));
+        dto.setServices(List.of("HC", "HT"));
     }
 
     @Test
