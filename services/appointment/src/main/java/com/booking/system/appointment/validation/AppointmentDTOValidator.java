@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Component
@@ -81,8 +82,10 @@ public class AppointmentDTOValidator implements ConstraintValidator<ValidAppoint
         int duration = serviceService.getServicesByCode(appointmentRequestDTO.getServices())
                 .stream().mapToInt(ServiceDTO::getSlotTime).sum();
 
-        LocalTime endTime = appointmentRequestDTO.getAppointmentTime().plusMinutes(duration);
+        LocalDateTime startDateTime = LocalDateTime.of(appointmentRequestDTO.getAppointmentDate(), appointmentRequestDTO.getAppointmentTime());
+        LocalDateTime endDateTime = startDateTime.plusMinutes(duration);
+        LocalDateTime businessEndDateTime = LocalDateTime.of(appointmentRequestDTO.getAppointmentDate(), endWorkingHours);
 
-        return endTime.isAfter(endWorkingHours);
+        return endDateTime.isAfter(businessEndDateTime);
     }
 }
