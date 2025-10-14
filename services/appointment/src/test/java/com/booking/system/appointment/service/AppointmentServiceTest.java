@@ -1,8 +1,6 @@
 package com.booking.system.appointment.service;
 
-import com.booking.system.appointment.dto.AppointmentDTO;
-import com.booking.system.appointment.dto.AppointmentRequestDTO;
-import com.booking.system.appointment.dto.ServiceDTO;
+import com.booking.system.appointment.dto.*;
 import com.booking.system.appointment.repository.AppointmentRepository;
 import com.booking.system.common.exception.AlreadyBookingException;
 import com.booking.system.database.entity.AppointmentEntity;
@@ -97,7 +95,6 @@ class AppointmentServiceTest {
 
     @Test
     void shouldNotCreateAppointmentSuccessfully_whenOverlap() {
-        // Arrange
         LocalDate today = LocalDate.now();
         LocalTime start = LocalTime.of(9, 0);
 
@@ -131,5 +128,75 @@ class AppointmentServiceTest {
         assertTrue(ex.getMessage().contains("Appointment already booked"));
 
         verify(appointmentRepository, never()).save(any());
+    }
+
+    @Test
+    void shouldReturnAvailableTimeSlots() {
+        LocalDate today = LocalDate.now().plusDays(1);
+
+        TimeSlotsRequestDTO request = new TimeSlotsRequestDTO();
+        request.setAppointmentDate(today);
+        request.setServices(List.of("HC"));
+
+        ServiceDTO service1 = new ServiceDTO();
+        service1.setCode("HC");
+        service1.setName("Hair Cut");
+        service1.setPrice(BigDecimal.valueOf(14));
+        service1.setSlotTime(40);
+
+        when(serviceService.getServicesByCode(any())).thenReturn(List.of(service1));
+
+        BusinessHoursDTO hours = new BusinessHoursDTO();
+        hours.setStartTime(LocalTime.of(9, 0));
+        hours.setEndTime(LocalTime.of(11, 0));
+        hours.setClosed(false);
+
+        when(businessHoursService.getBusinessHoursByDay(today)).thenReturn(hours);
+        when(appointmentRepository.findByStartAtBetween(any(), any())).thenReturn(List.of());
+
+        List<LocalTime> result = appointmentService.getAvailableTimeSlots(request);
+
+        assertFalse(result.isEmpty());
+        assertTrue(result.contains(LocalTime.of(9, 0)));
+    }
+
+    @Test
+    void shouldReturnEmptyList_whenClosed() {
+        LocalDate today = LocalDate.now();
+
+        TimeSlotsRequestDTO request = new TimeSlotsRequestDTO();
+        request.setAppointmentDate(today);
+        request.setServices(List.of("HC"));
+
+        BusinessHoursDTO hours = new BusinessHoursDTO();
+        hours.setClosed(true);
+
+        when(serviceService.getServicesByCode(any())).thenReturn(List.of());
+        when(businessHoursService.getBusinessHoursByDay(today)).thenReturn(hours);
+
+        List<LocalTime> result = appointmentService.getAvailableTimeSlots(request);
+
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void shouldReturnEmptyList_whenNoAvailableTimeSlots() {
+        LocalDate today = LocalDate.now();
+
+        TimeSlotsRequestDTO request = new TimeSlotsRequestDTO();
+        request.setAppointmentDate(today);
+        request.setServices(List.of("HC"));
+
+        BusinessHoursDTO hours = new BusinessHoursDTO();
+        hours.setStartTime(LocalTime.of(9, 0));
+        hours.setEndTime(LocalTime.of(11, 0));
+        hours.setClosed(false);
+
+        when(serviceService.getServicesByCode(any())).thenReturn(List.of());
+        when(businessHoursService.getBusinessHoursByDay(today)).thenReturn(hours);
+
+        List<LocalTime> result = appointmentService.getAvailableTimeSlots(request);
+
+        assertTrue(result.isEmpty());
     }
 }
