@@ -17,4 +17,14 @@ public class ServiceDTO {
     private String name;
     private BigDecimal price;
     private Integer slotTime;
+
+    @Override
+    public String toString() {
+        return "ServiceDTO{" +
+                "code='" + code + '\'' +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", slotTime=" + slotTime +
+                '}';
+    }
 }
