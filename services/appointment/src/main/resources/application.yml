@@ -5,3 +5,9 @@ spring:
     import: optional:classpath:application-database.yml
 server:
   port: 8081
+google:
+  calendar:
+    client-id: ${GOOGLE_CLIENT_ID}
+    client-secret: ${GOOGLE_CLIENT_SECRET}
+    redirect-uri: ${GOOGLE_REDIRECT_URI}
+    application-name: Barber Booking System

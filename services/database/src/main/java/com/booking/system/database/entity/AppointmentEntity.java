@@ -53,6 +53,9 @@ public class AppointmentEntity {
     )
     private Set<ServiceEntity> services = new HashSet<>();
 
+    @Column(name = "CALENDAR_EVENT_ID")
+    private String calendarEventId;
+
     @CreationTimestamp
     @Column(name = "CREATED_AT", updatable = false)
     private Instant createdAt;

@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -31,12 +32,15 @@ public class AppointmentService {
     private BusinessHoursService businessHoursService;
 
     @Autowired
+    private GoogleCalendarService googleCalendarService;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     private final ConcurrentHashMap<LocalDate, Object> locks = new ConcurrentHashMap<>();
 
     @Transactional
-    public AppointmentDTO createAppointment(AppointmentRequestDTO appointmentRequest) {
+    public AppointmentDTO createAppointment(AppointmentRequestDTO appointmentRequest) throws IOException {
         LocalDate appointmentDate = appointmentRequest.getAppointmentDate();
         Object lock = locks.computeIfAbsent(appointmentDate, d -> new Object());
 
@@ -56,7 +60,15 @@ public class AppointmentService {
             AppointmentEntity appointment = modelMapper.map(appointmentRequest, AppointmentEntity.class);
             appointment.setServices(new HashSet<>(services));
 
-            return modelMapper.map(appointmentRepository.save(appointment), AppointmentDTO.class);
+            AppointmentEntity savedAppointment = appointmentRepository.save(appointment);
+
+            AppointmentDTO appointmentDTO = modelMapper.map(savedAppointment, AppointmentDTO.class);
+            String eventId = googleCalendarService.createCalendarEvent(appointmentDTO, duration);
+
+            savedAppointment.setCalendarEventId(eventId);
+            savedAppointment = appointmentRepository.save(savedAppointment);
+
+            return modelMapper.map(savedAppointment, AppointmentDTO.class);
         }
     }
 

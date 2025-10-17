@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -42,7 +43,7 @@ class AppointmentServiceTest {
     private AppointmentService appointmentService;
 
     @Test
-    void shouldCreateAppointmentSuccessfully() {
+    void shouldCreateAppointmentSuccessfully() throws IOException {
         LocalDate today = LocalDate.now();
 
         AppointmentRequestDTO dto = new AppointmentRequestDTO();
