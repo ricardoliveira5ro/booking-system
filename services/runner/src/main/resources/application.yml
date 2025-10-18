@@ -1,5 +1,7 @@
 spring:
   config:
-    import: optional:classpath:application-database.yml
+    import:
+      - optional:classpath:application-database.yml
+      - optional:classpath:application-appointment.yml
 server:
   port: 8080

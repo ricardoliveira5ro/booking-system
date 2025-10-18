@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: appointment
+  config:
+    import: optional:classpath:application-database.yml
+server:
+  port: 8081
+google:
+  calendar:
+    client-id: ${GOOGLE_CALENDAR_CLIENT_ID}
+    client-secret: ${GOOGLE_CALENDAR_CLIENT_SECRET}
+    redirect-uri: ${GOOGLE_CALENDAR_REDIRECT_URI}
+    application-name: Barber Booking System
