@@ -3,11 +3,13 @@ package com.booking.system.appointment.service;
 import com.booking.system.appointment.dto.*;
 import com.booking.system.appointment.repository.AppointmentRepository;
 import com.booking.system.common.exception.AlreadyBookingException;
+import com.booking.system.common.exception.AppointmentNotFoundException;
 import com.booking.system.database.entity.AppointmentEntity;
 import com.booking.system.database.entity.ServiceEntity;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -17,6 +19,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
@@ -70,6 +73,17 @@ public class AppointmentService {
 
             return modelMapper.map(savedAppointment, AppointmentDTO.class);
         }
+    }
+
+    @Transactional
+    public void cancelAppointment(String appointmentId) throws IOException {
+        AppointmentEntity appointment = appointmentRepository.findById(UUID.fromString(appointmentId))
+                                            .orElseThrow(() -> new AppointmentNotFoundException("Appointment does not exist or already cancelled"));
+
+        String eventId = appointment.getCalendarEventId();
+
+        appointmentRepository.delete(appointment);
+        googleCalendarService.deleteCalendarEvent(eventId);
     }
 
     public List<LocalTime> getAvailableTimeSlots(TimeSlotsRequestDTO timeSlotsRequestDTO) {

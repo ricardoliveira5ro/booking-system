@@ -33,4 +33,11 @@ public class AppointmentController {
 
         return ResponseEntity.ok(appointment);
     }
+
+    @DeleteMapping
+    public ResponseEntity<String> cancelAppointment(@RequestParam String appointmentId) throws IOException {
+        appointmentService.cancelAppointment(appointmentId);
+
+        return ResponseEntity.ok("Appointment cancelled");
+    }
 }
