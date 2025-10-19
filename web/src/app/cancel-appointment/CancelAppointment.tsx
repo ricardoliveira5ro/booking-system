@@ -54,7 +54,7 @@ export default function CancelAppointment() {
             const appointmentDate = new Date(data.appointmentDate);
 
             setAppointmentData({
-                services: data.services.map((s: any) => ({
+                services: data.services.map((s: { code: string; name: string; price: number; slotTime: string }) => ({
                     code: s.code,
                     name: s.name,
                     price: s.price,
