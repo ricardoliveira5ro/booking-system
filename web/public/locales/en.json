@@ -61,7 +61,10 @@
         "when": "When",
         "contact": "Contact",
         "noTimeSlotsAvailable": "No time slots available",
-        "createSuccessMessage": "Appointment confirmed for {weekday} {day}, {month} at {time}"
+        "createSuccessMessage": "Appointment confirmed for {weekday} {day}, {month} at {time}",
+        "cancelAppointmentTitle": "Are you sure you want to cancel this appointment?",
+        "cancelAppointmentBtn": "Cancel",
+        "cancelAppointmentBack": "Go Back"
     },
     "errors": {
         "apiError": "Something went wrong",

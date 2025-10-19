@@ -61,7 +61,10 @@
         "when": "Quando",
         "contact": "Contacto",
         "noTimeSlotsAvailable": "Não existem horários disponíveis",
-        "createSuccessMessage": "Marcação confirmada para {weekday} {day} de {month}, às {time}"
+        "createSuccessMessage": "Marcação confirmada para {weekday} {day} de {month}, às {time}",
+        "cancelAppointmentTitle": "Quer mesmo cancelar esta marcação?",
+        "cancelAppointmentBtn": "Cancelar",
+        "cancelAppointmentBack": "Voltar atrás"
     },
     "errors": {
         "apiError": "Algo correu mal",
