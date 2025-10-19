@@ -56,6 +56,9 @@ public class AppointmentEntity {
     @Column(name = "CALENDAR_EVENT_ID")
     private String calendarEventId;
 
+    @Column(name = "CANCEL_KEY")
+    private String cancelKey;
+
     @CreationTimestamp
     @Column(name = "CREATED_AT", updatable = false)
     private Instant createdAt;

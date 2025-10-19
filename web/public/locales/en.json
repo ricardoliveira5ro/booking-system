@@ -64,7 +64,8 @@
         "createSuccessMessage": "Appointment confirmed for {weekday} {day}, {month} at {time}",
         "cancelAppointmentTitle": "Are you sure you want to cancel this appointment?",
         "cancelAppointmentBtn": "Cancel",
-        "cancelAppointmentBack": "Go Back"
+        "cancelAppointmentBack": "Go Back",
+        "cancelAppointmentSuccess": "Appointment cancelled successfully"
     },
     "errors": {
         "apiError": "Something went wrong",

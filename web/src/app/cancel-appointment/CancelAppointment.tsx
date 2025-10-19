@@ -9,6 +9,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react';
 import { Slide, toast } from 'react-toastify';
 import CancelAppointmentSkeleton from './CancelAppointmentSkeleton';
+import { useCancelAppointment } from '@/hooks/useCancelAppointment';
 
 export default function CancelAppointment() {
 
@@ -82,6 +83,40 @@ export default function CancelAppointment() {
         }
     }, [isError, error?.message])
 
+    const { mutate } = useCancelAppointment(appointmentId ?? '', cancelKey ?? '');
+    const handleCancelAppointment = () => {
+        mutate(undefined, {
+            onSuccess: () => {
+                router.replace('/');
+                toast.success(t("cancelAppointmentSuccess"), {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: false,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Slide,
+                });
+            },
+            onError: (err) => {
+                router.replace('/');
+                toast.error(err.message, {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: false,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Slide,
+                });
+            }
+        });
+    };
+
     const renderContent = () => {
         if (isPending) {
             return <CancelAppointmentSkeleton />;
@@ -119,11 +154,11 @@ export default function CancelAppointment() {
                     ))}
                 </div>
                 <div className='flex flex-col gap-y-4'>
-                    <button className='flex gap-x-2 justify-center items-center bg-[var(--orange)] px-4 py-1.5 rounded-lg'>
+                    <button onClick={handleCancelAppointment} className='flex gap-x-2 justify-center items-center bg-[var(--orange)] px-4 py-1.5 rounded-lg cursor-pointer'>
                         <span className='text-lg'>{t('cancelAppointmentBtn')}</span>
                         <CalendarX />
                     </button>
-                    <button className='flex gap-x-2 justify-center items-center px-4 py-1.5 rounded-lg'>
+                    <button onClick={() => router.replace('/')} className='flex gap-x-2 justify-center items-center px-4 py-1.5 rounded-lg cursor-pointer'>
                         <MoveLeft />
                         <span className='text-lg'>{t('cancelAppointmentBack')}</span>
                     </button>

@@ -64,7 +64,8 @@
         "createSuccessMessage": "Marcação confirmada para {weekday} {day} de {month}, às {time}",
         "cancelAppointmentTitle": "Quer mesmo cancelar esta marcação?",
         "cancelAppointmentBtn": "Cancelar",
-        "cancelAppointmentBack": "Voltar atrás"
+        "cancelAppointmentBack": "Voltar atrás",
+        "cancelAppointmentSuccess": "Marcação cancelada com sucesso"
     },
     "errors": {
         "apiError": "Algo correu mal",

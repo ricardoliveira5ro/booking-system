@@ -7,9 +7,9 @@ import com.booking.system.common.exception.AppointmentNotFoundException;
 import com.booking.system.database.entity.AppointmentEntity;
 import com.booking.system.database.entity.ServiceEntity;
 import jakarta.transaction.Transactional;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -72,6 +72,9 @@ public class AppointmentService {
 
             AppointmentEntity savedAppointment = appointmentRepository.save(appointment);
 
+            String cancelKey = UUID.randomUUID().toString();
+            savedAppointment.setCancelKey(DigestUtils.sha256Hex(cancelKey));
+
             AppointmentDTO appointmentDTO = modelMapper.map(savedAppointment, AppointmentDTO.class);
             String eventId = googleCalendarService.createCalendarEvent(appointmentDTO, duration);
 
@@ -83,9 +86,13 @@ public class AppointmentService {
     }
 
     @Transactional
-    public void cancelAppointment(String appointmentId) throws IOException {
+    public void cancelAppointment(String appointmentId, String cancelKey) throws IOException {
         AppointmentEntity appointment = appointmentRepository.findById(UUID.fromString(appointmentId))
                                             .orElseThrow(() -> new AppointmentNotFoundException("Appointment does not exist or already cancelled"));
+
+        String hashedKey = DigestUtils.sha256Hex(cancelKey);
+        if (!hashedKey.equals(appointment.getCancelKey()))
+            throw new AppointmentNotFoundException("Invalid cancel key");
 
         String eventId = appointment.getCalendarEventId();
 

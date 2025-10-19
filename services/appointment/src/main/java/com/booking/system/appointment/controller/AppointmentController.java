@@ -41,9 +41,9 @@ public class AppointmentController {
         return ResponseEntity.ok(appointment);
     }
 
-    @DeleteMapping
-    public ResponseEntity<String> cancelAppointment(@RequestParam String appointmentId) throws IOException {
-        appointmentService.cancelAppointment(appointmentId);
+    @DeleteMapping("/{appointmentId}")
+    public ResponseEntity<String> cancelAppointment(@PathVariable("appointmentId") String appointmentId, @RequestParam(name = "cancelKey") String cancelKey) throws IOException {
+        appointmentService.cancelAppointment(appointmentId, cancelKey);
 
         return ResponseEntity.ok("Appointment cancelled");
     }
