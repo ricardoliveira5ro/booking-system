@@ -91,6 +91,11 @@ public class GoogleCalendarService {
         return createdEvent.getId();
     }
 
+    public void deleteCalendarEvent(String eventId) throws IOException {
+        Calendar calendarService = getCalendarService();
+        calendarService.events().delete("primary", eventId).execute();
+    }
+
     public void disconnect() {
         BarberEntity barber = barberRepository.findAll().getFirst();
 

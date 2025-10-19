@@ -27,10 +27,24 @@ public class AppointmentController {
         return ResponseEntity.ok(timeSlots.stream().map(LocalTime::toString).toList());
     }
 
+    @GetMapping("/{appointmentId}")
+    public ResponseEntity<AppointmentDTO> getAppointment(@PathVariable("appointmentId") String appointmentId) {
+        AppointmentDTO appointment = appointmentService.getAppointment(appointmentId);
+
+        return ResponseEntity.ok(appointment);
+    }
+
     @PostMapping
     public ResponseEntity<AppointmentDTO> createAppointment(@Valid @RequestBody AppointmentRequestDTO appointmentRequest) throws IOException {
         AppointmentDTO appointment = appointmentService.createAppointment(appointmentRequest);
 
         return ResponseEntity.ok(appointment);
+    }
+
+    @DeleteMapping("/{appointmentId}")
+    public ResponseEntity<String> cancelAppointment(@PathVariable("appointmentId") String appointmentId, @RequestParam(name = "cancelKey") String cancelKey) throws IOException {
+        appointmentService.cancelAppointment(appointmentId, cancelKey);
+
+        return ResponseEntity.ok("Appointment cancelled");
     }
 }

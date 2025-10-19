@@ -61,7 +61,11 @@
         "when": "Quando",
         "contact": "Contacto",
         "noTimeSlotsAvailable": "Não existem horários disponíveis",
-        "createSuccessMessage": "Marcação confirmada para {weekday} {day} de {month}, às {time}"
+        "createSuccessMessage": "Marcação confirmada para {weekday} {day} de {month}, às {time}",
+        "cancelAppointmentTitle": "Quer mesmo cancelar esta marcação?",
+        "cancelAppointmentBtn": "Cancelar",
+        "cancelAppointmentBack": "Voltar atrás",
+        "cancelAppointmentSuccess": "Marcação cancelada com sucesso"
     },
     "errors": {
         "apiError": "Algo correu mal",
@@ -72,6 +76,7 @@
         "INVALID_APPOINTMENT_TIME": "Hora de marcação inválida",
         "INVALID_SERVICES": "Serviço inválido",
         "INVALID_DETAILS": "Detalhes de marcação inválidos",
-        "APPOINTMENT_ALREADY_BOOKED": "Horário já foi escolhido"
+        "APPOINTMENT_ALREADY_BOOKED": "Horário já foi escolhido",
+        "APPOINTMENT_NOT_FOUND": "Marcação não existe ou já foi cancelada"
     }
 }
