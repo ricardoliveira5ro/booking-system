@@ -5,7 +5,7 @@ import { AppointmentData } from '@/models/Appointment';
 import { useQuery } from '@tanstack/react-query';
 import { CalendarX, MoveLeft } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react';
 import { Slide, toast } from 'react-toastify';
 import CancelAppointmentSkeleton from './CancelAppointmentSkeleton';
@@ -14,6 +14,8 @@ export default function CancelAppointment() {
 
     const t = useTranslations('appointment');
     const errors = useTranslations('errors');
+    
+    const router = useRouter();  
 
     const searchParams = useSearchParams();
     const appointmentId = searchParams.get('appointment-id');
@@ -27,6 +29,9 @@ export default function CancelAppointment() {
             try {
                 const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/appointment/${appointmentId}`)
                 const data = await res.json();
+
+                if (data.code === 'APPOINTMENT_NOT_FOUND')
+                    router.replace('/');
     
                 if (!res.ok)
                     throw new Error(errors(`${data.code || 'GENERAL'}`));
