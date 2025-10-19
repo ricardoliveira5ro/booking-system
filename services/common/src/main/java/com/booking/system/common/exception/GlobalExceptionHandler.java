@@ -21,6 +21,14 @@ public class GlobalExceptionHandler {
     protected String details = null;
     protected List<String> stackTrace = null;
 
+    @ExceptionHandler(AppointmentNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleAppointmentNotFoundException(AppointmentNotFoundException ex) {
+        setDetailsAndStackTrace(ex);
+
+        return new ResponseEntity<>(new ErrorResponse("APPOINTMENT_NOT_FOUND", "Appointment does not exist or already cancelled", details, stackTrace, LocalDateTime.now()),
+                HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(AlreadyBookingException.class)
     public ResponseEntity<ErrorResponse> handleAlreadyBookingException(AlreadyBookingException ex) {
         setDetailsAndStackTrace(ex);
