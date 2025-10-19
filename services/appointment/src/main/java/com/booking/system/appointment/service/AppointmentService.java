@@ -42,6 +42,13 @@ public class AppointmentService {
 
     private final ConcurrentHashMap<LocalDate, Object> locks = new ConcurrentHashMap<>();
 
+    public AppointmentDTO getAppointment(String appointmentId) {
+        AppointmentEntity appointmentEntity = appointmentRepository.findById(UUID.fromString(appointmentId))
+                                                    .orElseThrow(() -> new AppointmentNotFoundException("Appointment does not exist or already cancelled"));
+
+        return modelMapper.map(appointmentEntity, AppointmentDTO.class);
+    }
+
     @Transactional
     public AppointmentDTO createAppointment(AppointmentRequestDTO appointmentRequest) throws IOException {
         LocalDate appointmentDate = appointmentRequest.getAppointmentDate();
