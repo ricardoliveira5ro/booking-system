@@ -5,6 +5,7 @@ import com.booking.system.appointment.repository.AppointmentRepository;
 import com.booking.system.common.exception.AlreadyBookingException;
 import com.booking.system.database.entity.AppointmentEntity;
 import com.booking.system.database.entity.ServiceEntity;
+import com.resend.core.exception.ResendException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -43,7 +44,7 @@ class AppointmentServiceTest {
     private AppointmentService appointmentService;
 
     @Test
-    void shouldCreateAppointmentSuccessfully() throws IOException {
+    void shouldCreateAppointmentSuccessfully() throws IOException, ResendException {
         LocalDate today = LocalDate.now();
 
         AppointmentRequestDTO dto = new AppointmentRequestDTO();

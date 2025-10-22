@@ -6,20 +6,21 @@ import com.booking.system.common.exception.AlreadyBookingException;
 import com.booking.system.common.exception.AppointmentNotFoundException;
 import com.booking.system.database.entity.AppointmentEntity;
 import com.booking.system.database.entity.ServiceEntity;
+import com.resend.Resend;
+import com.resend.core.exception.ResendException;
+import com.resend.services.emails.model.CreateEmailOptions;
 import jakarta.transaction.Transactional;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
@@ -38,7 +39,13 @@ public class AppointmentService {
     private GoogleCalendarService googleCalendarService;
 
     @Autowired
+    private EmailTemplateService emailTemplateService;
+
+    @Autowired
     private ModelMapper modelMapper;
+
+    @Value("${resend.api-token}")
+    private String resendApiToken;
 
     private final ConcurrentHashMap<LocalDate, Object> locks = new ConcurrentHashMap<>();
 
@@ -50,7 +57,7 @@ public class AppointmentService {
     }
 
     @Transactional
-    public AppointmentDTO createAppointment(AppointmentRequestDTO appointmentRequest) throws IOException {
+    public AppointmentDTO createAppointment(AppointmentRequestDTO appointmentRequest) throws IOException, ResendException {
         LocalDate appointmentDate = appointmentRequest.getAppointmentDate();
         Object lock = locks.computeIfAbsent(appointmentDate, d -> new Object());
 
@@ -80,6 +87,8 @@ public class AppointmentService {
 
             savedAppointment.setCalendarEventId(eventId);
             savedAppointment = appointmentRepository.save(savedAppointment);
+
+            sendConfirmationEmail(appointmentDTO);
 
             return modelMapper.map(savedAppointment, AppointmentDTO.class);
         }
@@ -147,5 +156,28 @@ public class AppointmentService {
         }
 
         return false;
+    }
+
+    private void sendConfirmationEmail(AppointmentDTO appointmentDTO) throws ResendException {
+        Map<String, Object> vars = Map.of(
+                "name", "User",
+                "date", LocalDate.now().toString(),
+                "time", LocalTime.now().toString(),
+                "services", "Hair Cut",
+                "cancelLink", "http://localhost:3000/cancel-appointment"
+        );
+
+        String htmlBody = emailTemplateService.buildAppointmentEmail(vars);
+
+        Resend resend = new Resend(resendApiToken);
+
+        CreateEmailOptions params = CreateEmailOptions.builder()
+                .from("Barber Booking <barberbooking@resend.dev>")
+                .to(appointmentDTO.getDetails().getEmail())
+                .subject("")
+                .html(htmlBody)
+                .build();
+
+        resend.emails().send(params);
     }
 }

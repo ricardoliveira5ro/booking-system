@@ -4,6 +4,7 @@ import com.booking.system.appointment.dto.AppointmentDTO;
 import com.booking.system.appointment.dto.AppointmentRequestDTO;
 import com.booking.system.appointment.dto.TimeSlotsRequestDTO;
 import com.booking.system.appointment.service.AppointmentService;
+import com.resend.core.exception.ResendException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,7 @@ public class AppointmentController {
     }
 
     @PostMapping
-    public ResponseEntity<AppointmentDTO> createAppointment(@Valid @RequestBody AppointmentRequestDTO appointmentRequest) throws IOException {
+    public ResponseEntity<AppointmentDTO> createAppointment(@Valid @RequestBody AppointmentRequestDTO appointmentRequest) throws IOException, ResendException {
         AppointmentDTO appointment = appointmentService.createAppointment(appointmentRequest);
 
         return ResponseEntity.ok(appointment);
