@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -46,6 +47,9 @@ public class AppointmentService {
 
     @Value("${resend.api-token}")
     private String resendApiToken;
+
+    @Value("${spring.profiles.active}")
+    private String activeProfile;
 
     private final ConcurrentHashMap<LocalDate, Object> locks = new ConcurrentHashMap<>();
 
@@ -88,7 +92,7 @@ public class AppointmentService {
             savedAppointment.setCalendarEventId(eventId);
             savedAppointment = appointmentRepository.save(savedAppointment);
 
-            sendConfirmationEmail(appointmentDTO);
+            sendConfirmationEmail(appointmentDTO, savedAppointment.getId().toString(), cancelKey);
 
             return modelMapper.map(savedAppointment, AppointmentDTO.class);
         }
@@ -158,13 +162,21 @@ public class AppointmentService {
         return false;
     }
 
-    private void sendConfirmationEmail(AppointmentDTO appointmentDTO) throws ResendException {
+    private void sendConfirmationEmail(AppointmentDTO appointmentDTO, String appointmentId, String cancelKey) throws ResendException {
+        String cancelLinkDomain = "dev".equalsIgnoreCase(activeProfile) ?
+                                    "http://localhost:3000" : "https://booking-system-blond-psi.vercel.app";
+        String cancelLink = cancelLinkDomain + "/cancel-appointment?appointment-id=" + appointmentId + "&cancel-key=" + cancelKey;
+
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("h:mm a");
+        String date = appointmentDTO.getAppointmentDate().format(dateFormatter);
+        String time = appointmentDTO.getAppointmentDate().format(timeFormatter);
+
         Map<String, Object> vars = Map.of(
-                "name", "User",
-                "date", LocalDate.now().toString(),
-                "time", LocalTime.now().toString(),
-                "services", "Hair Cut",
-                "cancelLink", "http://localhost:3000/cancel-appointment"
+            "name", appointmentDTO.getDetails().getName(),
+            "date", date,
+            "time", time,
+            "cancelLink", cancelLink
         );
 
         String htmlBody = emailTemplateService.buildAppointmentEmail(vars);
@@ -174,7 +186,7 @@ public class AppointmentService {
         CreateEmailOptions params = CreateEmailOptions.builder()
                 .from("Barber Booking <barberbooking@resend.dev>")
                 .to(appointmentDTO.getDetails().getEmail())
-                .subject("")
+                .subject("Appointment Confirmed")
                 .html(htmlBody)
                 .build();
 
