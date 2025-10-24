@@ -36,9 +36,7 @@ export default function Appointment() {
         if (step === 1) return appointmentFormData.services.length === 0;
         else if (step === 2) return appointmentFormData.services.length === 0 || !appointmentFormData.date || !appointmentFormData.time;
         else if (step === 3) {
-            const detailsEmpty = 
-                appointmentFormData.details.name === "" ||
-                (appointmentFormData.details.email === "" && appointmentFormData.details.phoneNumber === "");
+            const detailsEmpty = appointmentFormData.details.name === "" || appointmentFormData.details.email === "";
             return appointmentFormData.services.length === 0 || !appointmentFormData.date || !appointmentFormData.time || detailsEmpty;
         }
         return false;

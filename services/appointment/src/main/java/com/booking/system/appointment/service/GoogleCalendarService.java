@@ -71,7 +71,7 @@ public class GoogleCalendarService {
         Calendar calendarService = getCalendarService();
 
         Event event = new Event()
-                .setSummary("Booking: " + appointment.getDetails().getName())
+                .setSummary("Appointment: " + appointment.getDetails().getName())
                 .setDescription(buildEventDescription(appointment));
 
         LocalDateTime startDateTime = appointment.getAppointmentDate();
@@ -150,18 +150,16 @@ public class GoogleCalendarService {
 
     private String buildEventDescription(AppointmentDTO appointment) {
         StringBuilder description = new StringBuilder();
-        description.append("BOOKING DETAILS\n\n");
+        description.append("Appointment Details:\n\n");
         description.append("Client: ").append(appointment.getDetails().getName()).append("\n");
+        description.append("Email: ").append(appointment.getDetails().getEmail()).append("\n");
 
         if (appointment.getDetails().getPhoneNumber() != null)
             description.append("Phone Number: ").append(appointment.getDetails().getPhoneNumber()).append("\n");
 
-        if (appointment.getDetails().getEmail() != null && !appointment.getDetails().getEmail().isEmpty())
-            description.append("Email: ").append(appointment.getDetails().getEmail()).append("\n");
-
         if (appointment.getServices() != null && !appointment.getServices().isEmpty()) {
             description.append("\nServices:\n");
-            appointment.getServices().forEach(service -> description.append("  • ").append(service).append("\n"));
+            appointment.getServices().forEach(service -> description.append("  • ").append(service.getName()).append(" -- ").append(service.getSlotTime()).append(" min").append("\n"));
         }
 
         description.append("\n---\n");
