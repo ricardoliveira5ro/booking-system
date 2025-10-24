@@ -162,7 +162,7 @@ public class AppointmentService {
         return false;
     }
 
-    private void sendConfirmationEmail(AppointmentDTO appointmentDTO, String appointmentId, String cancelKey) throws ResendException {
+    void sendConfirmationEmail(AppointmentDTO appointmentDTO, String appointmentId, String cancelKey) throws ResendException {
         String cancelLinkDomain = "dev".equalsIgnoreCase(activeProfile) ?
                                     "http://localhost:3000" : "https://booking-system-blond-psi.vercel.app";
         String cancelLink = cancelLinkDomain + "/cancel-appointment?appointment-id=" + appointmentId + "&cancel-key=" + cancelKey;
