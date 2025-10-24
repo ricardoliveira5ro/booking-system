@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -36,6 +37,9 @@ class AppointmentServiceTest {
 
     @Mock
     private BusinessHoursService businessHoursService;
+
+    @Mock
+    private GoogleCalendarService googleCalendarService;
 
     @Mock
     private ModelMapper modelMapper;
@@ -79,7 +83,11 @@ class AppointmentServiceTest {
         serviceEntity2.setSlotTime(20);
 
         AppointmentEntity savedEntity = new AppointmentEntity();
+        savedEntity.setId(UUID.randomUUID());
+
         AppointmentDTO expectedDto = new AppointmentDTO();
+        expectedDto.setAppointmentDate(LocalDateTime.now());
+        expectedDto.setDetails(new DetailsDTO("Tester", "tester@example.com", 123456789, "test message"));
 
         when(serviceService.getServicesByCode(List.of("HC", "HT"))).thenReturn(serviceDTOs);
         when(modelMapper.map(service1, ServiceEntity.class)).thenReturn(serviceEntity1);
@@ -88,11 +96,15 @@ class AppointmentServiceTest {
         when(modelMapper.map(dto, AppointmentEntity.class)).thenReturn(new AppointmentEntity());
         when(appointmentRepository.save(any())).thenReturn(savedEntity);
         when(modelMapper.map(savedEntity, AppointmentDTO.class)).thenReturn(expectedDto);
+        when(googleCalendarService.createCalendarEvent(eq(expectedDto), anyInt())).thenReturn("event123");
 
-        AppointmentDTO result = appointmentService.createAppointment(dto);
+        AppointmentService spyService = spy(appointmentService);
+        doNothing().when(spyService).sendConfirmationEmail(any(), any(), any());
+
+        AppointmentDTO result = spyService.createAppointment(dto);
 
         assertEquals(expectedDto, result);
-        verify(appointmentRepository, times(1)).save(any());
+        verify(appointmentRepository, times(2)).save(any());
     }
 
     @Test
