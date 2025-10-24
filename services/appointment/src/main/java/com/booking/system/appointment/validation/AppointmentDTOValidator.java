@@ -64,9 +64,7 @@ public class AppointmentDTOValidator implements ConstraintValidator<ValidAppoint
             return false;
         }
 
-        if (appointmentRequestDTO.getDetails().getName().isBlank() &&
-            (appointmentRequestDTO.getDetails().getEmail().isBlank() || appointmentRequestDTO.getDetails().getPhoneNumber() == null)
-        ) {
+        if (appointmentRequestDTO.getDetails().getName().isBlank() || appointmentRequestDTO.getDetails().getEmail().isBlank()) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("INVALID_DETAILS")
                     .addPropertyNode("details")
