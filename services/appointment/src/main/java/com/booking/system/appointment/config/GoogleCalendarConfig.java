@@ -35,7 +35,7 @@ public class GoogleCalendarConfig {
         try {
             return GoogleNetHttpTransport.newTrustedTransport();
         } catch (Exception e) {
-            throw new RuntimeException("Failed to create HTTP transport", e);
+            throw new IllegalStateException("Failed to create HTTP transport", e);
         }
     }
 }
