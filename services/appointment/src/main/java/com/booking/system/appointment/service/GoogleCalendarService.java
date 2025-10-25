@@ -112,7 +112,7 @@ public class GoogleCalendarService {
         BarberEntity barber = barberRepository.findAll().getFirst();
 
         if (!barber.isConnected())
-            throw new RuntimeException("Google Calendar not configured");
+            throw new IllegalStateException("Google Calendar not configured");
 
         if (barber.getTokenExpiry().isBefore(LocalDateTime.now()))
             refreshAccessToken(barber);

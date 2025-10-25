@@ -25,6 +25,18 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
+    void handleAppointmentNotFoundException() {
+        AppointmentNotFoundException ex = new AppointmentNotFoundException("Appointment Not Found");
+
+        ResponseEntity<ErrorResponse> response = handler.handleAppointmentNotFoundException(ex);
+
+        assertNotNull(response.getBody());
+        assertEquals(404, response.getStatusCode().value());
+        assertEquals("APPOINTMENT_NOT_FOUND", response.getBody().code());
+        assertEquals("Appointment does not exist or already cancelled", response.getBody().message());
+    }
+
+    @Test
     void handleAlreadyBookingException() {
         AlreadyBookingException ex = new AlreadyBookingException("Already booked");
 
