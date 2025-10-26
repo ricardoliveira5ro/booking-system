@@ -108,7 +108,7 @@ public class GoogleCalendarService {
         }
     }
 
-    private Calendar getCalendarService() throws IOException {
+    Calendar getCalendarService() throws IOException {
         BarberEntity barber = barberRepository.findAll().getFirst();
 
         if (!barber.isConnected())
@@ -132,7 +132,7 @@ public class GoogleCalendarService {
                 .build();
     }
 
-    private void refreshAccessToken(BarberEntity barber) throws IOException {
+    void refreshAccessToken(BarberEntity barber) throws IOException {
         GoogleTokenResponse response = new GoogleRefreshTokenRequest(httpTransport, jsonFactory, barber.getRefreshToken(), config.getClientId(), config.getClientSecret())
                                             .execute();
 
@@ -141,7 +141,7 @@ public class GoogleCalendarService {
         barberRepository.save(barber);
     }
 
-    private GoogleAuthorizationCodeFlow createFlow() throws IOException {
+    GoogleAuthorizationCodeFlow createFlow() throws IOException {
         return new GoogleAuthorizationCodeFlow.Builder(httpTransport, jsonFactory, config.getClientId(), config.getClientSecret(), Collections.singleton(CalendarScopes.CALENDAR))
                 .setAccessType("offline")
                 .setApprovalPrompt("force")
