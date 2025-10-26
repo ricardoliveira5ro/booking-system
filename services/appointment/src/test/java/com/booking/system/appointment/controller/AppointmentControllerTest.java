@@ -18,6 +18,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -122,10 +123,10 @@ class AppointmentControllerTest {
         String appointmentId = "1234";
         String cancelKey = "1111222233334444";
 
-        appointmentService.cancelAppointment(appointmentId, cancelKey);
-
         mockMvc.perform(delete("/api/appointment/" + appointmentId + "?cancelKey=" + cancelKey))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Appointment cancelled"));
+
+        verify(appointmentService).cancelAppointment(appointmentId, cancelKey);
     }
 }
