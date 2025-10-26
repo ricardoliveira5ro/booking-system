@@ -18,8 +18,12 @@ import java.time.LocalTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -56,6 +60,33 @@ class AppointmentControllerTest {
     }
 
     @Test
+    void shouldReturnAppointmentById() throws Exception {
+        DetailsDTO details = new DetailsDTO("Tester", "tester@example.com", 123456789, "test message");
+
+        ServiceDTO service1 = new ServiceDTO("HC", "Hair Cut", BigDecimal.valueOf(12), 40);
+        ServiceDTO service2 = new ServiceDTO("HT", "Hair Treatment", BigDecimal.valueOf(8), 20);
+        List<ServiceDTO> services = List.of(service1, service2);
+
+        AppointmentDTO dto = new AppointmentDTO(LocalDateTime.now().plusDays(1).withNano(0), services, details);
+
+        String appointmentId = "1234";
+
+        when(appointmentService.getAppointment(appointmentId)).thenReturn(dto);
+
+        mockMvc.perform(get("/api/appointment/" + appointmentId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.appointmentDate").value(dto.getAppointmentDate().toString()))
+                .andExpect(jsonPath("$.services[0].code").value("HC"))
+                .andExpect(jsonPath("$.services[0].name").value("Hair Cut"))
+                .andExpect(jsonPath("$.services[1].code").value("HT"))
+                .andExpect(jsonPath("$.services[1].name").value("Hair Treatment"))
+                .andExpect(jsonPath("$.details.name").value("Tester"))
+                .andExpect(jsonPath("$.details.email").value("tester@example.com"))
+                .andExpect(jsonPath("$.details.phoneNumber").value(123456789))
+                .andExpect(jsonPath("$.details.message").value("test message"));
+    }
+
+    @Test
     void shouldReturnAppointmentCreated() throws Exception {
         DetailsDTO details = new DetailsDTO("Tester", "tester@example.com", 123456789, "test message");
 
@@ -85,5 +116,17 @@ class AppointmentControllerTest {
                 .andExpect(jsonPath("$.details.email").value("tester@example.com"))
                 .andExpect(jsonPath("$.details.phoneNumber").value(123456789))
                 .andExpect(jsonPath("$.details.message").value("test message"));
+    }
+
+    @Test
+    void shouldCancelAppointment() throws Exception {
+        String appointmentId = "1234";
+        String cancelKey = "1111222233334444";
+
+        mockMvc.perform(delete("/api/appointment/" + appointmentId + "?cancelKey=" + cancelKey))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Appointment cancelled"));
+
+        verify(appointmentService).cancelAppointment(appointmentId, cancelKey);
     }
 }

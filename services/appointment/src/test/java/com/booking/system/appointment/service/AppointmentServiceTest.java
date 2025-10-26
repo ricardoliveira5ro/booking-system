@@ -3,13 +3,17 @@ package com.booking.system.appointment.service;
 import com.booking.system.appointment.dto.*;
 import com.booking.system.appointment.repository.AppointmentRepository;
 import com.booking.system.common.exception.AlreadyBookingException;
+import com.booking.system.common.exception.AppointmentNotFoundException;
 import com.booking.system.database.entity.AppointmentEntity;
 import com.booking.system.database.entity.ServiceEntity;
+import com.resend.Resend;
 import com.resend.core.exception.ResendException;
+import com.resend.services.emails.Emails;
+import com.resend.services.emails.model.CreateEmailOptions;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
@@ -18,9 +22,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -46,6 +48,43 @@ class AppointmentServiceTest {
 
     @InjectMocks
     private AppointmentService appointmentService;
+
+    @Test
+    void shouldGetAppointment() {
+        UUID appointmentId = UUID.randomUUID();
+        LocalDateTime now = LocalDateTime.now();
+
+        ServiceEntity serviceEntity1 = new ServiceEntity();
+        serviceEntity1.setCode("HC");
+        serviceEntity1.setName("Hair Cut");
+        serviceEntity1.setPrice(BigDecimal.valueOf(14));
+        serviceEntity1.setSlotTime(40);
+
+        AppointmentEntity appointmentEntity = new AppointmentEntity();
+        appointmentEntity.setId(appointmentId);
+        appointmentEntity.setServices(Set.of(serviceEntity1));
+        appointmentEntity.setStartAt(now);
+        appointmentEntity.setCancelKey("aaaa-bbbb-cccc");
+
+        when(appointmentRepository.findById(appointmentId)).thenReturn(Optional.of(appointmentEntity));
+
+        AppointmentDTO expectedDto = new AppointmentDTO();
+        expectedDto.setAppointmentDate(LocalDateTime.now());
+        expectedDto.setAppointmentDate(now);
+
+        when(modelMapper.map(appointmentEntity, AppointmentDTO.class)).thenReturn(expectedDto);
+
+        AppointmentDTO result = appointmentService.getAppointment(appointmentId.toString());
+
+        assertEquals(expectedDto, result);
+        verify(appointmentRepository, times(1)).findById(any());
+    }
+
+    @Test
+    void shouldNotFindAppointment() {
+        AppointmentNotFoundException ex = assertThrows(AppointmentNotFoundException.class, () -> appointmentService.getAppointment(UUID.randomUUID().toString()));
+        assertTrue(ex.getMessage().contains("Appointment does not exist or already cancelled"));
+    }
 
     @Test
     void shouldCreateAppointmentSuccessfully() throws IOException, ResendException {
@@ -145,6 +184,44 @@ class AppointmentServiceTest {
     }
 
     @Test
+    void shouldCancelAppointment() throws IOException {
+        UUID appointmentId = UUID.randomUUID();
+        String cancelKey = "aaaa-bbbb-cccc";
+        String hashedKey = DigestUtils.sha256Hex(cancelKey);
+        String eventId = "1234";
+
+        AppointmentEntity appointment = new AppointmentEntity();
+        appointment.setId(appointmentId);
+        appointment.setCancelKey(hashedKey);
+        appointment.setCalendarEventId(eventId);
+
+        when(appointmentRepository.findById(appointmentId)).thenReturn(Optional.of(appointment));
+
+        appointmentService.cancelAppointment(appointmentId.toString(), cancelKey);
+
+        verify(appointmentRepository).delete(appointment);
+        verify(googleCalendarService).deleteCalendarEvent(eventId);
+    }
+
+    @Test
+    void shouldThrowException_whenCancelKeyInvalidCancelAppointment() throws IOException {
+        UUID appointmentId = UUID.randomUUID();
+
+        AppointmentEntity appointment = new AppointmentEntity();
+        appointment.setId(appointmentId);
+        appointment.setCancelKey(DigestUtils.sha256Hex("aaaa-bbbb-cccc"));
+
+        when(appointmentRepository.findById(appointmentId)).thenReturn(Optional.of(appointment));
+
+        AppointmentNotFoundException ex = assertThrows(AppointmentNotFoundException.class,
+                () -> appointmentService.cancelAppointment(appointmentId.toString(), "random-key"));
+
+        assertTrue(ex.getMessage().contains("Invalid cancel key"));
+        verify(appointmentRepository, never()).delete(any());
+        verify(googleCalendarService, never()).deleteCalendarEvent(any());
+    }
+
+    @Test
     void shouldReturnAvailableTimeSlots() {
         LocalDate today = LocalDate.now().plusDays(1);
 
@@ -212,5 +289,42 @@ class AppointmentServiceTest {
         List<LocalTime> result = appointmentService.getAvailableTimeSlots(request);
 
         assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void shouldSendConfirmationEmail() throws ResendException {
+        EmailTemplateService emailTemplateService = mock(EmailTemplateService.class);
+        AppointmentService service = new AppointmentService();
+        service.emailTemplateService = emailTemplateService;
+        service.activeProfile = "dev";
+        service.resendApiToken = "resendToken12345";
+
+        AppointmentDTO appointmentDTO = new AppointmentDTO();
+        appointmentDTO.setAppointmentDate(LocalDateTime.now());
+        DetailsDTO details = new DetailsDTO("Tester", "tester@example.com", 123456789, "Test message");
+        appointmentDTO.setDetails(details);
+
+        when(emailTemplateService.buildAppointmentEmail(any())).thenReturn("<html>mock body</html>");
+
+        Emails mockEmails = mock(Emails.class);
+
+        try (MockedConstruction<Resend> mockResend = Mockito.mockConstruction(Resend.class,
+                (mock, context) -> when(mock.emails()).thenReturn(mockEmails))) {
+
+            service.sendConfirmationEmail(appointmentDTO, "1234", "aaaa-bbbb-cccc");
+            verify(emailTemplateService).buildAppointmentEmail(any());
+
+            ArgumentCaptor<CreateEmailOptions> captor = ArgumentCaptor.forClass(CreateEmailOptions.class);
+            verify(mockEmails).send(captor.capture());
+
+            CreateEmailOptions sent = captor.getValue();
+            assertEquals("Barber Booking <barberbooking@resend.dev>", sent.getFrom());
+            assertEquals("tester@example.com", sent.getTo().getFirst());
+            assertEquals("Appointment Confirmed", sent.getSubject());
+            assertTrue(sent.getHtml().contains("mock body"));
+
+            verify(emailTemplateService).buildAppointmentEmail(argThat(vars -> ((Map<?, ?>) vars).get("cancelLink").toString()
+                                                                                    .startsWith("http://localhost:3000/cancel-appointment")));
+        }
     }
 }

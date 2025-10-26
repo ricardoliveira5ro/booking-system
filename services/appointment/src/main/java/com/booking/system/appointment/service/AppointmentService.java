@@ -40,16 +40,16 @@ public class AppointmentService {
     private GoogleCalendarService googleCalendarService;
 
     @Autowired
-    private EmailTemplateService emailTemplateService;
+    EmailTemplateService emailTemplateService;
 
     @Autowired
     private ModelMapper modelMapper;
 
     @Value("${resend.api-token}")
-    private String resendApiToken;
+    String resendApiToken;
 
     @Value("${spring.profiles.active}")
-    private String activeProfile;
+    String activeProfile;
 
     private final ConcurrentHashMap<LocalDate, Object> locks = new ConcurrentHashMap<>();
 
