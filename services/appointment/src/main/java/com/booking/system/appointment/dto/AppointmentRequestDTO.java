@@ -28,4 +28,14 @@ public class AppointmentRequestDTO {
     private List<String> services;
 
     private DetailsDTO details;
+
+    @Override
+    public String toString() {
+        return "AppointmentRequestDTO{" +
+                "appointmentDate=" + appointmentDate +
+                ", appointmentTime=" + appointmentTime +
+                ", services=" + services +
+                ", details=" + details +
+                '}';
+    }
 }

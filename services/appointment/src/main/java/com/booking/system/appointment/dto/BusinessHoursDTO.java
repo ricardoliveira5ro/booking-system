@@ -16,4 +16,13 @@ public class BusinessHoursDTO {
     private LocalTime startTime;
     private LocalTime endTime;
     private boolean isClosed = false;
+
+    @Override
+    public String toString() {
+        return "BusinessHoursDTO{" +
+                "startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", isClosed=" + isClosed +
+                '}';
+    }
 }

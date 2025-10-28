@@ -23,4 +23,12 @@ public class TimeSlotsRequestDTO {
 
     @NotNull
     private List<String> services;
+
+    @Override
+    public String toString() {
+        return "TimeSlotsRequestDTO{" +
+                "appointmentDate=" + appointmentDate +
+                ", services=" + services +
+                '}';
+    }
 }
