@@ -2,6 +2,7 @@ package com.booking.system.appointment.service;
 
 import com.booking.system.appointment.dto.*;
 import com.booking.system.appointment.repository.AppointmentRepository;
+import com.booking.system.common.aop.LoggingUtils;
 import com.booking.system.common.exception.AlreadyBookingException;
 import com.booking.system.common.exception.AppointmentNotFoundException;
 import com.booking.system.database.entity.AppointmentEntity;
@@ -10,6 +11,7 @@ import com.resend.Resend;
 import com.resend.core.exception.ResendException;
 import com.resend.services.emails.model.CreateEmailOptions;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,6 +139,8 @@ public class AppointmentService {
     }
 
     private List<LocalTime> generateSlots(LocalTime startTime, LocalTime endTime) {
+        LoggingUtils.logMethodCall(this, startTime, endTime);
+
         List<LocalTime> slots = new ArrayList<>();
         LocalTime time = startTime;
 
@@ -144,6 +148,8 @@ public class AppointmentService {
             slots.add(time);
             time = time.plusMinutes(30);
         }
+
+        LoggingUtils.logMethodReturn(this, slots);
 
         return slots;
     }
@@ -163,6 +169,8 @@ public class AppointmentService {
     }
 
     void sendConfirmationEmail(AppointmentDTO appointmentDTO, String appointmentId, String cancelKey) throws ResendException {
+        LoggingUtils.logMethodCall(this, appointmentDTO, appointmentId);
+
         String cancelLinkDomain = "dev".equalsIgnoreCase(activeProfile) ?
                                     "http://localhost:3000" : "https://booking-system-blond-psi.vercel.app";
         String cancelLink = cancelLinkDomain + "/cancel-appointment?appointment-id=" + appointmentId + "&cancel-key=" + cancelKey;
@@ -191,5 +199,7 @@ public class AppointmentService {
                 .build();
 
         resend.emails().send(params);
+
+        LoggingUtils.logMethodCompletion(this);
     }
 }
