@@ -17,4 +17,13 @@ public class AppointmentDTO {
     private LocalDateTime appointmentDate;
     private List<ServiceDTO> services;
     private DetailsDTO details;
+
+    @Override
+    public String toString() {
+        return "AppointmentDTO{" +
+                "appointmentDate=" + appointmentDate +
+                ", services=" + services +
+                ", details=" + details +
+                '}';
+    }
 }

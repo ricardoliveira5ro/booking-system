@@ -3,6 +3,7 @@ package com.booking.system.appointment.service;
 import com.booking.system.appointment.config.GoogleCalendarConfig;
 import com.booking.system.appointment.dto.AppointmentDTO;
 import com.booking.system.appointment.repository.BarberRepository;
+import com.booking.system.common.aop.LoggingUtils;
 import com.booking.system.database.entity.BarberEntity;
 import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.auth.oauth2.Credential;
@@ -109,6 +110,8 @@ public class GoogleCalendarService {
     }
 
     Calendar getCalendarService() throws IOException {
+        LoggingUtils.logMethodCall(this);
+
         BarberEntity barber = barberRepository.findAll().getFirst();
 
         if (!barber.isConnected())
@@ -126,6 +129,7 @@ public class GoogleCalendarService {
                 .setAccessToken(barber.getAccessToken())
                 .setRefreshToken(barber.getRefreshToken());
 
+        LoggingUtils.logMethodCompletion(this);
 
         return new Calendar.Builder(httpTransport, jsonFactory, credential)
                 .setApplicationName(config.getApplicationName())
@@ -133,15 +137,22 @@ public class GoogleCalendarService {
     }
 
     void refreshAccessToken(BarberEntity barber) throws IOException {
+        LoggingUtils.logMethodCall(this, barber);
+
         GoogleTokenResponse response = new GoogleRefreshTokenRequest(httpTransport, jsonFactory, barber.getRefreshToken(), config.getClientId(), config.getClientSecret())
                                             .execute();
 
         barber.setAccessToken(response.getAccessToken());
         barber.setTokenExpiry(LocalDateTime.now().plusSeconds(response.getExpiresInSeconds()));
         barberRepository.save(barber);
+
+        LoggingUtils.logMethodCompletion(this);
     }
 
     GoogleAuthorizationCodeFlow createFlow() throws IOException {
+        LoggingUtils.logMethodCall(this);
+        LoggingUtils.logMethodCompletion(this);
+
         return new GoogleAuthorizationCodeFlow.Builder(httpTransport, jsonFactory, config.getClientId(), config.getClientSecret(), Collections.singleton(CalendarScopes.CALENDAR))
                 .setAccessType("offline")
                 .setApprovalPrompt("force")
@@ -149,6 +160,8 @@ public class GoogleCalendarService {
     }
 
     private String buildEventDescription(AppointmentDTO appointment) {
+        LoggingUtils.logMethodCall(this, appointment);
+
         StringBuilder description = new StringBuilder();
         description.append("Appointment Details:\n\n");
         description.append("Client: ").append(appointment.getDetails().getName()).append("\n");
@@ -164,6 +177,8 @@ public class GoogleCalendarService {
 
         description.append("\n---\n");
         description.append("by Booking System");
+
+        LoggingUtils.logMethodCompletion(this);
 
         return description.toString();
     }

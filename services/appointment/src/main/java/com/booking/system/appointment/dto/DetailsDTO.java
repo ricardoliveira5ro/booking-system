@@ -15,4 +15,14 @@ public class DetailsDTO {
     private String email;
     private Integer phoneNumber;
     private String message;
+
+    @Override
+    public String toString() {
+        return "DetailsDTO{" +
+                "name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", phoneNumber=" + phoneNumber +
+                ", message='" + message + '\'' +
+                '}';
+    }
 }
