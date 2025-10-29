@@ -51,6 +51,10 @@ public class LoggingAspect {
 
     private Object[] filterSensitiveArgumentsByName(MethodSignature signature, Object[] args) {
         String[] parameterNames = signature.getParameterNames();
+
+        if (parameterNames == null)
+            return args;
+
         Object[] filtered = new Object[args.length];
 
         Set<String> sensitiveNames = Set.of("password", "cancelKey", "token", "secret", "apiKey", "privateKey");
