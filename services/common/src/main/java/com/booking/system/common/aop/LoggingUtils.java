@@ -7,6 +7,10 @@ import java.util.Arrays;
 @Slf4j
 public class LoggingUtils {
 
+    private LoggingUtils() {
+        throw new UnsupportedOperationException("Utility class");
+    }
+
     public static void logMethodCall(Object context, Object... args) {
         String className = context.getClass().getSimpleName();
         String methodName = Thread.currentThread().getStackTrace()[2].getMethodName();
