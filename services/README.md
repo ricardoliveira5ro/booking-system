@@ -25,10 +25,10 @@ Built with Java and Spring Boot and organized as a multi-module Maven project, h
 ```
 
 📁 services/
-├── 📂 common/
+├── 📂 common/                                          # Shared AOP logging and global exception handling
 │   ├── 📂 aop/
 │   └── 📂 exception/
-├── 📂 database/
+├── 📂 database/                                        # JPA entities, Flyway migration scripts, and seed data
 │   ├── 📂 entity/
 │   └── 📂 resources/
 │       ├── 📂 db/
@@ -36,10 +36,10 @@ Built with Java and Spring Boot and organized as a multi-module Maven project, h
 │       │   ├── 📂 migration/
 │       │   └── 📂 rollbacks/
 │       └── 📄 application-database.yml
-├── 📂 security/
+├── 📂 security/                                        # Spring Security config and CORS management
 │   └── 📂 security/     
 │       └── 📄 SecurityConfiguration.java
-├── 📂 appointment/
+├── 📂 appointment/                                     # Appointment endpoints, logic, and integrations
 │   ├── 📂 src/
 │   │   ├── 📂 config/
 │   │   ├── 📂 controller/
@@ -53,8 +53,8 @@ Built with Java and Spring Boot and organized as a multi-module Maven project, h
 │       │   └── 📂 templates/
 │       │       └── 📄 appointment-confirmation.html
 │       ├── 📄 application-appointment.yml
-│       └── 📄 application.yml                          # Global default
-├── 📂 runner/
+│       └── 📄 application.yml                          
+├── 📂 runner/                                          # Entry module bundling all others into a deployable Spring Boot app
 │   ├── 📂 src/
 │   │   └── 📄 AppointmentRunner.java                   # Global Services Runner
 │   └── 📂 resources/
@@ -63,3 +63,38 @@ Built with Java and Spring Boot and organized as a multi-module Maven project, h
 ├── 📄 pom.xml
 └── ...
 ```
+
+### ⚙️ Core Concepts & Implementations
+
+- **Flyway Schema Versioning**: 
+Database migrations and seed scripts ensure consistent environments across deployments.
+
+- **Lombok**:
+Removes boilerplate code (getters, setters, constructors, etc.).
+
+- **AOP Logging**:
+Cross-cutting logging via Spring AOP for consistent tracing and debugging.
+
+- **Spring Security**:
+Configured for CORS control — only allows requests from the deployed frontend origin (and localhost in dev).
+
+- **Google Calendar API**:
+Syncs confirmed appointments directly to the barber’s Google Calendar.
+
+- **Email Notifications (Resend + Thymeleaf)**:
+Sends confirmation/cancellation emails rendered from HTML templates.
+
+- **Validation**:
+Enforces structured and valid input data across all request DTOs.
+
+- **ModelMapper**:
+Simplifies conversions between DTOs and entities with custom mappings.
+
+- **Concurrency Handling**:
+Uses synchronized blocks and ConcurrentHashMap to prevent race conditions or double bookings.
+
+- **Testing & Code Quality**:
+JUnit for unit testing, integrated with SonarQube for coverage and static analysis.
+
+- **Docker Packaging**:
+Packaged into a container image and deployed to Render.
