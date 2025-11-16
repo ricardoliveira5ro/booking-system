@@ -124,12 +124,12 @@ class LoggingAspectTest {
 
     private static class BusinessService {
         public String performOperation(String input) {
-            return "processed";
+            return input;
         }
 
         @NoLogReturn
         public String performOperationWithoutReturnLogging(String input) {
-            return "processed";
+            return input;
         }
     }
 }
