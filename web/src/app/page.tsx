@@ -1,5 +1,5 @@
 import './home.css'
-import { Instagram, Mail, Phone } from 'lucide-react';
+import { Instagram, Mail, MoveRight, Phone } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 
@@ -25,27 +25,45 @@ export default function Home() {
           <div id="shadow"></div>
         </div>
         <p data-aos="fade-right" data-aos-duration="900" className="px-4 text-center">{t('description')}</p>
-        <div data-aos="fade-right" data-aos-duration="900" className="holographic-container">
-          <Link href={'/appointment'} className="holographic-card cursor-pointer">
-            <h2>{t('appointmentButton')}</h2>
-          </Link>
+        <div data-aos="fade-right" data-aos-duration="900" className='flex flex-col gap-y-5 items-center'>
+          <div className="holographic-container">
+            <Link href={'/appointment'} className="holographic-card cursor-pointer">
+              <h2>{t('appointmentButton')}</h2>
+            </Link>
+          </div>
+          <div className='relative group w-fit cursor-pointer p-0.5'>
+            <div className="flex gap-x-1">
+              <span>Login</span>
+              <MoveRight />
+            </div>
+            <span className="absolute left-0 -bottom-[2px] h-[2px] w-0 bg-white transition-all duration-300 group-hover:w-full"></span>
+          </div>
         </div>
       </main>
       <footer data-aos="fade-up" data-aos-anchor-placement="center-bottom" data-aos-duration="900"  className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a className="flex items-center gap-2 hover:underline hover:underline-offset-4" 
+        <a className="relative group flex items-center gap-2 pb-[2px]" 
           href="https://google.com" target="_blank" rel="noopener noreferrer"
         >
-          <Instagram color='white' />{t('socials.instagram')}
+          <Instagram color='white' />
+          <span className="relative after:absolute after:left-0 after:-bottom-[2px] after:h-[2px] after:w-0 after:bg-white after:transition-all after:duration-300 group-hover:after:w-full">
+            {t('socials.instagram')}
+          </span>
         </a>
-        <a className="flex items-center gap-2 hover:underline hover:underline-offset-4" 
+        <a className="relative group flex items-center gap-2 pb-[2px]" 
           href="https://google.com" target="_blank" rel="noopener noreferrer"
         >
-          <Phone color='white' />{t('socials.phone')}
+          <Phone color='white' />
+          <span className="relative after:absolute after:left-0 after:-bottom-[2px] after:h-[2px] after:w-0 after:bg-white after:transition-all after:duration-300 group-hover:after:w-full">
+            {t('socials.phone')}
+          </span>
         </a>
-        <a className="flex items-center gap-2 hover:underline hover:underline-offset-4" 
+        <a className="relative group flex items-center gap-2 pb-[2px]" 
           href="https://google.com" target="_blank" rel="noopener noreferrer"
         >
-          <Mail color='white' />{t('socials.email')}
+          <Mail color='white' />
+          <span className="relative after:absolute after:left-0 after:-bottom-[2px] after:h-[2px] after:w-0 after:bg-white after:transition-all after:duration-300 group-hover:after:w-full">
+            {t('socials.email')}
+          </span>
         </a>
       </footer>
     </div>
